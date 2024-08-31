@@ -27,7 +27,7 @@
         }
 
         .background-image.strobe {
-            animation: strobe 0.05s infinite; /* Speed up the strobe effect */
+            animation: strobe 0.2s infinite; /* Adjust timing for strobe effect */
         }
 
         @keyframes strobe {
@@ -101,6 +101,14 @@
             border-radius: 5px;
             cursor: pointer;
             z-index: 1000; /* Make sure the button is always on top */
+            opacity: 0; /* Start invisible */
+            transform: translateX(100%); /* Start off-screen */
+            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
+        }
+
+        .toggle-button.visible {
+            opacity: 1; /* Make the button visible */
+            transform: translateX(0); /* Move into view */
         }
     </style>
 </head>
@@ -121,13 +129,15 @@
             const backgroundImage = document.getElementById('backgroundImage');
             backgroundImage.style.opacity = 1; // Fade in the background image
 
-            // Show the clickable image and text with transitions
+            // Show the clickable image, text, and toggle button with transitions
             setTimeout(function() {
                 const img = document.getElementById('randomImage');
                 const text = document.getElementById('clickMeText');
+                const button = document.getElementById('toggleStrobe');
                 img.classList.add('visible');
                 text.classList.add('visible');
-            }, 1000); // Reduced timing to make the image and text appear 0.5 seconds sooner
+                button.classList.add('visible');
+            }, 1000); // Reduced timing to make the elements appear 0.5 seconds sooner
         });
 
         // Random image position script
@@ -187,4 +197,3 @@
     </script>
 </body>
 </html>
-
