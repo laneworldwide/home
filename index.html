@@ -26,6 +26,9 @@
     <!-- Include the Spotify Web Playback SDK -->
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script>
+        // Initialize effects storage
+        window.currentEffects = {};
+
         window.onSpotifyWebPlaybackSDKReady = () => {
             const token = 'BQDbV-0XT6gn3SzPNv7iPKYbUW5sJqM16b_yDSBt1Yrmb_hFdubZMdvXWbYWPHJimGW347-bzlX8XOBzUgSos248vME6ok3OP32OkW7q4PHZPinsNfPfvwjUD8bm1PPabBnTyDOtNa7w7nERl_cvpNyXvJ22FoXpvYfTPK1QMsNc_Zn3kSteO6nuEpC85rKtTsaJfOywUg'; // Replace with your access token
             const player = new Spotify.Player({
@@ -35,15 +38,14 @@
             });
 
             // Error handling
-            player.addListener('initialization_error', ({ message }) => { console.error(message); });
-            player.addListener('authentication_error', ({ message }) => { console.error(message); });
-            player.addListener('account_error', ({ message }) => { console.error(message); });
-            player.addListener('playback_error', ({ message }) => { console.error(message); });
+            player.addListener('initialization_error', ({ message }) => { console.error('Initialization error:', message); });
+            player.addListener('authentication_error', ({ message }) => { console.error('Authentication error:', message); });
+            player.addListener('account_error', ({ message }) => { console.error('Account error:', message); });
+            player.addListener('playback_error', ({ message }) => { console.error('Playback error:', message); });
 
             // Ready
             player.addListener('ready', ({ device_id }) => {
                 console.log('Ready with Device ID', device_id);
-                // Optionally transfer playback to the Web Playback SDK
                 transferPlaybackHere(device_id, token);
             });
 
@@ -106,7 +108,7 @@
 
             // Function to stop visual effects
             function stopEffects() {
-                const { strobeInterval, moveInterval } = window.currentEffects || {};
+                const { strobeInterval, moveInterval } = window.currentEffects;
                 if (strobeInterval) clearInterval(strobeInterval);
                 if (moveInterval) clearInterval(moveInterval);
                 document.body.style.backgroundColor = ''; // Reset background
@@ -119,4 +121,3 @@
     </script>
 </body>
 </html>
-
