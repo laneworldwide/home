@@ -67,11 +67,11 @@
             const backgroundImage = document.getElementById('backgroundImage');
             backgroundImage.style.opacity = 1; // Fade in the background image
 
-            // Show the clickable image once the background is fully visible
+            // Show the clickable image half a second sooner
             setTimeout(function() {
                 const img = document.getElementById('randomImage');
                 img.classList.add('visible');
-            }, 3000); // Adjusted timing to match the background transition
+            }, 2500); // Reduced timing to make the image appear 0.5 seconds sooner
         });
 
         // Random image position script
