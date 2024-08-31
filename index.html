@@ -64,13 +64,12 @@
             setTimeout(function() {
                 document.body.classList.remove('fade-to-purple');
                 document.body.classList.add('final-background');
-                
-                // After final background is visible, show the clickable image
-                setTimeout(function() {
-                    const img = document.getElementById('randomImage');
-                    img.classList.add('visible');
-                }, 1000); // Adjust this timing as needed
-            }, 2000); // Wait 2 seconds for the transition to purple before switching to the final background
+                document.body.style.opacity = 1;
+
+                // Show the clickable image once the final background is set
+                const img = document.getElementById('randomImage');
+                img.classList.add('visible');
+            }, 2000); // Adjust this timing as needed
         });
 
         // Random image position script
@@ -101,3 +100,4 @@
     </script>
 </body>
 </html>
+
