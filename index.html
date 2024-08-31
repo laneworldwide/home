@@ -43,31 +43,43 @@
             width: 200px; /* Adjust size as needed */
             cursor: pointer;
             opacity: 0; /* Start invisible */
-            transform: translateX(-100%); /* Start off-screen */
+            transform: translate(-100%, -100%); /* Start off-screen */
             transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
         }
 
         .clickable-image.visible {
             opacity: 1; /* Make the clickable image visible */
-            transform: translateX(0); /* Move into the screen */
+            transform: translate(0, 0); /* Move into the screen */
         }
 
         .click-me-text {
             position: absolute;
-            text-align: center;
-            font-size: 24px; /* Adjust font size as needed */
+            cursor: pointer;
             color: white;
+            font-size: 24px;
+            text-align: center;
             opacity: 0; /* Start invisible */
-            transition: opacity 2s ease-in-out; /* Fade effect */
-            pointer-events: none; /* Prevent text from blocking clicks */
+            transform: translate(-100%, -100%); /* Start off-screen */
+            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+
+        .click-me-text.visible {
+            opacity: 1; /* Make the text visible */
+            transform: translate(0, 0); /* Move into view */
+        }
+
+        .click-me-text.fade-out {
+            opacity: 0; /* Fade out the text */
+            transform: translate(-100%, -100%); /* Optional: slide out if needed */
         }
     </style>
 </head>
 <body>
     <div class="background-image" id="backgroundImage"></div>
-    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="handleClick()">
+    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
     <div id="clickMeText" class="click-me-text">CLICK ME!</div>
-
+    
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
     <script>
@@ -78,22 +90,25 @@
             const backgroundImage = document.getElementById('backgroundImage');
             backgroundImage.style.opacity = 1; // Fade in the background image
 
-            // Show the clickable image and text 0.5 seconds earlier
+            // Show the clickable image and text with transitions
             setTimeout(function() {
                 const img = document.getElementById('randomImage');
-                img.classList.add('visible');
                 const text = document.getElementById('clickMeText');
-                text.style.opacity = 1; // Make text visible
-            }, 1500); // Adjust timing for earlier appearance
+                img.classList.add('visible');
+                text.classList.add('visible');
+            }, 1999); // Reduced timing to make the image and text appear 0.5 seconds sooner
         });
 
         // Random image position script
         document.addEventListener("DOMContentLoaded", function() {
             const img = document.getElementById('randomImage');
+            const text = document.getElementById('clickMeText');
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
             const imgWidth = img.offsetWidth;
             const imgHeight = img.offsetHeight;
+            const textWidth = text.offsetWidth;
+            const textHeight = text.offsetHeight;
 
             // Generate random position within the viewport
             const randomX = Math.floor(Math.random() * (viewportWidth - imgWidth));
@@ -103,22 +118,22 @@
             img.style.left = `${randomX}px`;
             img.style.top = `${randomY}px`;
 
-            // Position the "CLICK ME!" text above the image
-            const text = document.getElementById('clickMeText');
-            text.style.left = `${randomX}px`;
-            text.style.top = `${randomY - 40}px`; // Adjust the offset above the image
+            // Center the text above the image
+            text.style.left = `${randomX + (imgWidth / 2) - (textWidth / 2)}px`;
+            text.style.top = `${randomY - textHeight}px`;
         });
 
-        // Handle click event on the image
-        function handleClick() {
-            const img = document.getElementById('randomImage');
-            const text = document.getElementById('clickMeText');
-            img.style.opacity = 0; // Fade out image
-            text.style.opacity = 0; // Fade out text
+        // Spotify widget display function
+        function showSpotifyWidget() {
+            var widget = document.getElementById('spotify-widget');
+            widget.style.display = 'block';
             setTimeout(function() {
-                img.style.display = 'none'; // Hide image after fade out
-                text.style.display = 'none'; // Hide text after fade out
-            }, 2000); // Match the fade-out duration
+                widget.style.opacity = 1;
+            }, 10); // Ensure opacity change is detected
+            
+            // Fade out the "CLICK ME!" text after clicking the image
+            const text = document.getElementById('clickMeText');
+            text.classList.add('fade-out');
         }
     </script>
 </body>
