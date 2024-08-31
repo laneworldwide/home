@@ -129,16 +129,19 @@
         };
     </script>
     
-    <!-- Optional: Initialize player on image click -->
+    <!-- Initialize player on image click -->
     <script>
         document.getElementById('clickable-image').addEventListener('click', () => {
             document.getElementById('spotify-player').style.display = 'block'; // Show the player container
-            if (window.onSpotifyWebPlaybackSDKReady) {
-                window.onSpotifyWebPlaybackSDKReady(); // Initialize the player
+            
+            // Initialize the Spotify Web Playback SDK
+            if (typeof window.onSpotifyWebPlaybackSDKReady === 'function') {
+                window.onSpotifyWebPlaybackSDKReady(); // Ensure the function is defined before calling
             } else {
-                console.error('Spotify Web Playback SDK is not ready.');
+                console.error('Spotify Web Playback SDK is not ready or not defined.');
             }
         });
     </script>
 </body>
 </html>
+
