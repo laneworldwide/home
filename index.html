@@ -51,13 +51,24 @@
             opacity: 1; /* Make the clickable image visible */
             transform: translateX(0); /* Move into the screen */
         }
+
+        /* Strobe effect styles */
+        .strobe-effect {
+            animation: strobe 0.1s infinite;
+        }
+
+        @keyframes strobe {
+            0% { background-color: white; }
+            50% { background-color: black; }
+            100% { background-color: white; }
+        }
     </style>
 </head>
 <body>
     <div class="background-image" id="backgroundImage"></div>
     <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
 
-    <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media" onload="addStrobeEffect()" onmouseleave="removeStrobeEffect()"></iframe>
 
     <script>
         window.addEventListener('load', function() {
@@ -99,8 +110,17 @@
                 widget.style.opacity = 1;
             }, 10); // Ensure opacity change is detected
         }
+
+        // Function to add the strobe effect
+        function addStrobeEffect() {
+            document.body.classList.add('strobe-effect');
+        }
+
+        // Function to remove the strobe effect
+        function removeStrobeEffect() {
+            document.body.classList.remove('strobe-effect');
+        }
     </script>
 </body>
 </html>
-
 
