@@ -41,6 +41,12 @@
             position: absolute;
             width: 200px; /* Adjust size as needed */
             cursor: pointer;
+            opacity: 0; /* Start invisible */
+            transition: opacity 2s ease-in-out; /* Fade in effect */
+        }
+
+        .clickable-image.visible {
+            opacity: 1; /* Make the clickable image visible */
         }
     </style>
 </head>
@@ -58,6 +64,12 @@
             setTimeout(function() {
                 document.body.classList.remove('fade-to-purple');
                 document.body.classList.add('final-background');
+                
+                // After final background is visible, show the clickable image
+                setTimeout(function() {
+                    const img = document.getElementById('randomImage');
+                    img.classList.add('visible');
+                }, 1000); // Adjust this timing as needed
             }, 2000); // Wait 2 seconds for the transition to purple before switching to the final background
         });
 
