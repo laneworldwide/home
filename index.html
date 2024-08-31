@@ -11,12 +11,16 @@
             padding: 0;
             background: black; /* Start with a black background */
             opacity: 0; /* Start invisible */
-            transition: opacity 2s ease-in-out, background-color 2s ease-in-out;
+            transition: opacity 2s ease-in-out, background-color 4s ease-in-out;
             overflow: hidden; /* Prevent scrollbars due to image overflow */
         }
 
         body.fade-in {
             opacity: 1; /* Fade to visible */
+            background: purple; /* Transition to purple */
+        }
+
+        body.final-background {
             background: url('static/image1.jpg') no-repeat center center fixed; /* Final background */
             background-size: cover;
         }
@@ -49,6 +53,11 @@
         // Fade-in effect on page load
         window.addEventListener('load', function() {
             document.body.classList.add('fade-in');
+
+            // Transition to the final background after the purple phase
+            setTimeout(function() {
+                document.body.classList.add('final-background');
+            }, 4000); // Adjust timing for smooth transition
         });
 
         // Random image position script
@@ -61,21 +70,5 @@
 
             // Generate random position within the viewport
             const randomX = Math.floor(Math.random() * (viewportWidth - imgWidth));
-            const randomY = Math.floor(Math.random() * (viewportHeight - imgHeight));
+            const randomY = Math.floor
 
-            // Set the image position
-            img.style.left = `${randomX}px`;
-            img.style.top = `${randomY}px`;
-        });
-
-        // Spotify widget display function
-        function showSpotifyWidget() {
-            var widget = document.getElementById('spotify-widget');
-            widget.style.display = 'block';
-            setTimeout(function() {
-                widget.style.opacity = 1;
-            }, 10); // Ensure opacity change is detected
-        }
-    </script>
-</body>
-</html>
