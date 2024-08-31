@@ -38,41 +38,45 @@
             transition: opacity 2s ease-in-out;
         }
 
-        .clickable-image {
-            position: absolute;
-            width: 200px; /* Adjust size as needed */
-            cursor: pointer;
-            opacity: 0; /* Start invisible */
-            transform: translateX(-100%); /* Start off-screen */
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
-        }
-
-        .clickable-image.visible {
-            opacity: 1; /* Make the clickable image visible */
-            transform: translateX(0); /* Move into the screen */
-        }
-
-        .click-text {
+        .clickable-container {
             position: absolute;
             width: 200px; /* Adjust size as needed */
             text-align: center;
+            transform: translateX(-100%); /* Start off-screen */
+            transition: transform 2s ease-in-out; /* Slide in effect */
+        }
+
+        .clickable-image {
+            width: 100%; /* Make image fill the container */
+            cursor: pointer;
+            opacity: 0; /* Start invisible */
+            transition: opacity 2s ease-in-out; /* Fade in effect */
+        }
+
+        .click-text {
             font-size: 24px;
             color: white;
             opacity: 0; /* Start invisible */
-            transform: translateY(-100%); /* Start off-screen */
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
+            transition: opacity 2s ease-in-out; /* Fade in effect */
         }
 
-        .click-text.visible {
-            opacity: 1; /* Make the text visible */
-            transform: translateY(0); /* Move into the screen */
+        .clickable-container.visible {
+            transform: translateX(0); /* Move into the screen */
+        }
+
+        .clickable-image.visible, .click-text.visible {
+            opacity: 1; /* Make visible */
         }
     </style>
 </head>
 <body>
     <div class="background-image" id="backgroundImage"></div>
-    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
-    <div class="click-text" id="clickText">CLICK ME!</div>
+    
+    <div id="clickableContainer" class="clickable-container">
+        <div class="click-text" id="clickText">CLICK ME!</div>
+        <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
+    </div>
+
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
     <script>
@@ -83,17 +87,16 @@
             const backgroundImage = document.getElementById('backgroundImage');
             backgroundImage.style.opacity = 1; // Fade in the background image
 
-            // Show the clickable image and text
+            // Show the clickable container
             setTimeout(function() {
-                const img = document.getElementById('randomImage');
-                img.classList.add('visible');
-                const text = document.getElementById('clickText');
-                text.classList.add('visible');
+                const container = document.getElementById('clickableContainer');
+                container.classList.add('visible');
             }, 1999); // Reduced timing to make the image and text appear 0.5 seconds sooner
         });
 
         // Random image position script
         document.addEventListener("DOMContentLoaded", function() {
+            const container = document.getElementById('clickableContainer');
             const img = document.getElementById('randomImage');
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
@@ -104,9 +107,9 @@
             const randomX = Math.floor(Math.random() * (viewportWidth - imgWidth));
             const randomY = Math.floor(Math.random() * (viewportHeight - imgHeight));
 
-            // Set the image position
-            img.style.left = `${randomX}px`;
-            img.style.top = `${randomY}px`;
+            // Set the container position
+            container.style.left = `${randomX}px`;
+            container.style.top = `${randomY - 30}px`; // Adjust the Y position to place text above image
         });
 
         // Spotify widget display function
