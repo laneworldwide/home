@@ -14,6 +14,16 @@
             cursor: pointer;
             transition: transform 0.5s ease;
         }
+        /* Styles for the Spotify player container */
+        #spotify-player {
+            display: none; /* Initially hidden */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px; /* Adjust the height as needed */
+            background: #333; /* Example background color */
+        }
     </style>
 </head>
 <body>
@@ -29,95 +39,112 @@
         // Initialize effects storage
         window.currentEffects = {};
 
-        window.onSpotifyWebPlaybackSDKReady = () => {
-            const token = 'BQDbV-0XT6gn3SzPNv7iPKYbUW5sJqM16b_yDSBt1Yrmb_hFdubZMdvXWbYWPHJimGW347-bzlX8XOBzUgSos248vME6ok3OP32OkW7q4PHZPinsNfPfvwjUD8bm1PPabBnTyDOtNa7w7nERl_cvpNyXvJ22FoXpvYfTPK1QMsNc_Zn3kSteO6nuEpC85rKtTsaJfOywUg'; // Replace with your access token
-            const player = new Spotify.Player({
-                name: 'Web Playback SDK Player',
-                getOAuthToken: cb => { cb(token); },
-                volume: 0.5
-            });
+        // Flag to track if player has been initialized
+        let playerInitialized = false;
 
-            // Error handling
-            player.addListener('initialization_error', ({ message }) => { console.error('Initialization error:', message); });
-            player.addListener('authentication_error', ({ message }) => { console.error('Authentication error:', message); });
-            player.addListener('account_error', ({ message }) => { console.error('Account error:', message); });
-            player.addListener('playback_error', ({ message }) => { console.error('Playback error:', message); });
+        // Function to initialize the Spotify player
+        function initializePlayer() {
+            if (playerInitialized) return; // Prevent re-initialization
 
-            // Ready
-            player.addListener('ready', ({ device_id }) => {
-                console.log('Ready with Device ID', device_id);
-                transferPlaybackHere(device_id, token);
-            });
-
-            // Not Ready
-            player.addListener('not_ready', ({ device_id }) => {
-                console.log('Device ID has gone offline', device_id);
-            });
-
-            // Connect to the player!
-            player.connect();
-
-            // Function to transfer playback to this player
-            function transferPlaybackHere(device_id, token) {
-                fetch('https://api.spotify.com/v1/me/player', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        "device_ids": [device_id],
-                        "play": true,
-                    }),
+            window.onSpotifyWebPlaybackSDKReady = () => {
+                const token = 'BQDbV-0XT6gn3SzPNv7iPKYbUW5sJqM16b_yDSBt1Yrmb_hFdubZMdvXWbYWPHJimGW347-bzlX8XOBzUgSos248vME6ok3OP32OkW7q4PHZPinsNfPfvwjUD8bm1PPabBnTyDOtNa7w7nERl_cvpNyXvJ22FoXpvYfTPK1QMsNc_Zn3kSteO6nuEpC85rKtTsaJfOywUg'; // Replace with your access token
+                const player = new Spotify.Player({
+                    name: 'Web Playback SDK Player',
+                    getOAuthToken: cb => { cb(token); },
+                    volume: 0.5
                 });
-            }
 
-            // Listen for playback status changes
-            player.addListener('player_state_changed', state => {
-                if (!state) {
-                    return;
+                // Error handling
+                player.addListener('initialization_error', ({ message }) => { console.error('Initialization error:', message); });
+                player.addListener('authentication_error', ({ message }) => { console.error('Authentication error:', message); });
+                player.addListener('account_error', ({ message }) => { console.error('Account error:', message); });
+                player.addListener('playback_error', ({ message }) => { console.error('Playback error:', message); });
+
+                // Ready
+                player.addListener('ready', ({ device_id }) => {
+                    console.log('Ready with Device ID', device_id);
+                    transferPlaybackHere(device_id, token);
+                });
+
+                // Not Ready
+                player.addListener('not_ready', ({ device_id }) => {
+                    console.log('Device ID has gone offline', device_id);
+                });
+
+                // Connect to the player!
+                player.connect();
+
+                // Function to transfer playback to this player
+                function transferPlaybackHere(device_id, token) {
+                    fetch('https://api.spotify.com/v1/me/player', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            "device_ids": [device_id],
+                            "play": true,
+                        }),
+                    });
                 }
 
-                const isPlaying = !state.paused;
-                if (isPlaying) {
-                    triggerEffects();
-                } else {
-                    stopEffects();
+                // Listen for playback status changes
+                player.addListener('player_state_changed', state => {
+                    if (!state) {
+                        return;
+                    }
+
+                    const isPlaying = !state.paused;
+                    if (isPlaying) {
+                        triggerEffects();
+                    } else {
+                        stopEffects();
+                    }
+                });
+
+                // Function to trigger visual effects
+                function triggerEffects() {
+                    // Strobe effect
+                    const body = document.body;
+                    let strobeInterval = setInterval(() => {
+                        body.style.backgroundColor = body.style.backgroundColor === 'white' ? 'black' : 'white';
+                    }, 100); // Adjust for strobe speed
+
+                    // Moving image
+                    const clickableImage = document.getElementById('clickable-image');
+                    let moveInterval = setInterval(() => {
+                        const x = Math.random() * (window.innerWidth - clickableImage.clientWidth);
+                        const y = Math.random() * (window.innerHeight - clickableImage.clientHeight);
+                        clickableImage.style.transform = `translate(${x}px, ${y}px)`;
+                    }, 500); // Adjust for movement speed
+
+                    // Store intervals so they can be cleared later
+                    window.currentEffects = { strobeInterval, moveInterval };
                 }
-            });
 
-            // Function to trigger visual effects
-            function triggerEffects() {
-                // Strobe effect
-                const body = document.body;
-                let strobeInterval = setInterval(() => {
-                    body.style.backgroundColor = body.style.backgroundColor === 'white' ? 'black' : 'white';
-                }, 100); // Adjust for strobe speed
+                // Function to stop visual effects
+                function stopEffects() {
+                    const { strobeInterval, moveInterval } = window.currentEffects;
+                    if (strobeInterval) clearInterval(strobeInterval);
+                    if (moveInterval) clearInterval(moveInterval);
+                    document.body.style.backgroundColor = ''; // Reset background
 
-                // Moving image
-                const clickableImage = document.getElementById('clickable-image');
-                let moveInterval = setInterval(() => {
-                    const x = Math.random() * (window.innerWidth - clickableImage.clientWidth);
-                    const y = Math.random() * (window.innerHeight - clickableImage.clientHeight);
-                    clickableImage.style.transform = `translate(${x}px, ${y}px)`;
-                }, 500); // Adjust for movement speed
+                    // Optionally reset image position
+                    const clickableImage = document.getElementById('clickable-image');
+                    clickableImage.style.transform = `translate(-50%, -50%)`;
+                }
+            };
 
-                // Store intervals so they can be cleared later
-                window.currentEffects = { strobeInterval, moveInterval };
-            }
+            playerInitialized = true;
+        }
 
-            // Function to stop visual effects
-            function stopEffects() {
-                const { strobeInterval, moveInterval } = window.currentEffects;
-                if (strobeInterval) clearInterval(strobeInterval);
-                if (moveInterval) clearInterval(moveInterval);
-                document.body.style.backgroundColor = ''; // Reset background
-
-                // Optionally reset image position
-                const clickableImage = document.getElementById('clickable-image');
-                clickableImage.style.transform = `translate(-50%, -50%)`;
-            }
-        };
+        // Add click event listener to the image
+        document.getElementById('clickable-image').addEventListener('click', () => {
+            document.getElementById('spotify-player').style.display = 'block'; // Show the player container
+            initializePlayer(); // Initialize the player
+        });
     </script>
 </body>
 </html>
+
