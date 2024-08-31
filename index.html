@@ -3,104 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LANE</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>Spotify-Triggered Effects</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: black; /* Start with black */
-            transition: background-color 3s ease-in-out;
-            overflow: hidden; /* Prevent scrollbars due to image overflow */
-        }
-
-        .background-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('static/image1.jpg') no-repeat center center fixed;
-            background-size: cover;
-            opacity: 0;
-            transition: opacity 3s ease-in-out; /* Extended duration for smoother transition */
-        }
-
-        .spotify-widget {
-            display: none;
-            position: fixed;
+        /* Styles for the clickable image */
+        #clickable-image {
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 300px;
-            height: 380px;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-        }
-
-        .clickable-image {
-            position: absolute;
-            width: 200px; /* Adjust size as needed */
             cursor: pointer;
-            opacity: 0; /* Start invisible */
-            transform: translateX(-100%); /* Start off-screen */
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
-        }
-
-        .clickable-image.visible {
-            opacity: 1; /* Make the clickable image visible */
-            transform: translateX(0); /* Move into the screen */
+            transition: transform 0.5s ease;
         }
     </style>
 </head>
 <body>
-    <div class="background-image" id="backgroundImage"></div>
-    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
+    <!-- Container for the clickable image -->
+    <img src="your-image.png" id="clickable-image" alt="Clickable Image" width="100" height="100">
 
-    <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <!-- Placeholder for Spotify's SDK -->
+    <div id="spotify-player"></div>
 
+    <!-- Include the Spotify Web Playback SDK -->
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script>
-        window.addEventListener('load', function() {
-            // Transition to purple and gradually show the background image
-            document.body.style.backgroundColor = 'purple';
+        window.onSpotifyWebPlaybackSDKReady = () => {
+            const token = 'YOUR_SPOTIFY_ACCESS_TOKEN'; // Replace with your access token
+            const player = new Spotify.Player({
+                name: 'Web Playback SDK Player',
+                getOAuthToken: cb => { cb(token); },
+                volume: 0.5
+            });
 
-            const backgroundImage = document.getElementById('backgroundImage');
-            backgroundImage.style.opacity = 1; // Fade in the background image
+            // Error handling
+            player.addListener('initialization_error', ({ message }) => { console.error(message); });
+            player.addListener('authentication_error', ({ message }) => { console.error(message); });
+            player.addListener('account_error', ({ message }) => { console.error(message); });
+            player.addListener('playback_error', ({ message }) => { console.error(message); });
 
-            // Show the clickable image half a second sooner
-            setTimeout(function() {
-                const img = document.getElementById('randomImage');
-                img.classList.add('visible');
-            }, 1999); // Reduced timing to make the image appear 0.5 seconds sooner
-        });
+            // Ready
+            player.addListener('ready', ({ device_id }) => {
+                console.log('Ready with Device ID', device_id);
+                // Optionally transfer playback to the Web Playback SDK
+                transferPlaybackHere(device_id, token);
+            });
 
-        // Random image position script
-        document.addEventListener("DOMContentLoaded", function() {
-            const img = document.getElementById('randomImage');
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            const imgWidth = img.offsetWidth;
-            const imgHeight = img.offsetHeight;
+            // Not Ready
+            player.addListener('not_ready', ({ device_id }) => {
+                console.log('Device ID has gone offline', device_id);
+            });
 
-            // Generate random position within the viewport
-            const randomX = Math.floor(Math.random() * (viewportWidth - imgWidth));
-            const randomY = Math.floor(Math.random() * (viewportHeight - imgHeight));
+            // Connect to the player!
+            player.connect();
 
-            // Set the image position
-            img.style.left = `${randomX}px`;
-            img.style.top = `${randomY}px`;
-        });
+            // Function to transfer playback to this player
+            function transferPlaybackHere(device_id, token) {
+                fetch('https://api.spotify.com/v1/me/player', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        "device_ids": [device_id],
+                        "play": true,
+                    }),
+                });
+            }
 
-        // Spotify widget display function
-        function showSpotifyWidget() {
-            var widget = document.getElementById('spotify-widget');
-            widget.style.display = 'block';
-            setTimeout(function() {
-                widget.style.opacity = 1;
-            }, 10); // Ensure opacity change is detected
-        }
+            // Listen for playback status changes
+            player.addListener('player_state_changed', state => {
+                if (!state) {
+                    return;
+                }
+
+                const isPlaying = !state.paused;
+                if (isPlaying) {
+                    triggerEffects();
+                } else {
+                    stopEffects();
+                }
+            });
+
+            // Function to trigger visual effects
+            function triggerEffects() {
+                // Strobe effect
+                const body = document.body;
+                let strobeInterval = setInterval(() => {
+                    body.style.backgroundColor = body.style.backgroundColor === 'white' ? 'black' : 'white';
+                }, 100); // Adjust for strobe speed
+
+                // Moving image
+                const clickableImage = document.getElementById('clickable-image');
+                let moveInterval = setInterval(() => {
+                    const x = Math.random() * (window.innerWidth - clickableImage.clientWidth);
+                    const y = Math.random() * (window.innerHeight - clickableImage.clientHeight);
+                    clickableImage.style.transform = `translate(${x}px, ${y}px)`;
+                }, 500); // Adjust for movement speed
+
+                // Store intervals so they can be cleared later
+                window.currentEffects = { strobeInterval, moveInterval };
+            }
+
+            // Function to stop visual effects
+            function stopEffects() {
+                const { strobeInterval, moveInterval } = window.currentEffects || {};
+                if (strobeInterval) clearInterval(strobeInterval);
+                if (moveInterval) clearInterval(moveInterval);
+                document.body.style.backgroundColor = ''; // Reset background
+
+                // Optionally reset image position
+                const clickableImage = document.getElementById('clickable-image');
+                clickableImage.style.transform = `translate(-50%, -50%)`;
+            }
+        };
     </script>
 </body>
 </html>
-
 
