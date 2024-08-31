@@ -41,7 +41,7 @@
         window.onSpotifyWebPlaybackSDKReady = () => {
             const token = 'BQDbV-0XT6gn3SzPNv7iPKYbUW5sJqM16b_yDSBt1Yrmb_hFdubZMdvXWbYWPHJimGW347-bzlX8XOBzUgSos248vME6ok3OP32OkW7q4PHZPinsNfPfvwjUD8bm1PPabBnTyDOtNa7w7nERl_cvpNyXvJ22FoXpvYfTPK1QMsNc_Zn3kSteO6nuEpC85rKtTsaJfOywUg'; // Replace with your actual token
             const player = new Spotify.Player({
-                name: 'Web Playback SDK Player',
+                name: 'Unique Spotify Web Playback Player', // Updated player name
                 getOAuthToken: cb => { cb(token); },
                 volume: 0.5
             });
@@ -133,12 +133,10 @@
     <script>
         document.getElementById('clickable-image').addEventListener('click', () => {
             document.getElementById('spotify-player').style.display = 'block'; // Show the player container
-            
-            // Initialize the Spotify Web Playback SDK
-            if (typeof window.onSpotifyWebPlaybackSDKReady === 'function') {
-                window.onSpotifyWebPlaybackSDKReady(); // Ensure the function is defined before calling
+            if (window.onSpotifyWebPlaybackSDKReady) {
+                window.onSpotifyWebPlaybackSDKReady(); // Initialize the player
             } else {
-                console.error('Spotify Web Playback SDK is not ready or not defined.');
+                console.error('Spotify Web Playback SDK is not ready.');
             }
         });
     </script>
