@@ -83,7 +83,7 @@
                     if (response.ok) {
                         console.log('Playback transferred');
                     } else {
-                        console.error('Failed to transfer playback');
+                        console.error('Failed to transfer playback', response.statusText);
                     }
                 }).catch(error => {
                     console.error('Error in fetch request:', error);
@@ -152,4 +152,5 @@
     </script>
 </body>
 </html>
+
 
