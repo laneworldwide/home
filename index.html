@@ -101,6 +101,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            z-index: 1000; /* Make sure the button is always on top */
         }
     </style>
 </head>
@@ -176,8 +177,13 @@
 
         // Toggle strobe effect
         function toggleStrobe() {
-            document.body.classList.toggle('strobe');
+            if (document.body.classList.contains('strobe')) {
+                document.body.classList.remove('strobe'); // Remove strobe effect
+            } else {
+                document.body.classList.add('strobe'); // Add strobe effect
+            }
         }
     </script>
 </body>
 </html>
+
