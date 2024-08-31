@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LANE</title>
+    <title>Spotify Player</title>
     <style>
         /* Styles for the clickable image */
         #clickable-image {
@@ -39,6 +39,7 @@
     <!-- Define onSpotifyWebPlaybackSDKReady function -->
     <script>
         window.onSpotifyWebPlaybackSDKReady = () => {
+            console.log('Spotify Web Playback SDK is ready');
             const token = 'BQDbV-0XT6gn3SzPNv7iPKYbUW5sJqM16b_yDSBt1Yrmb_hFdubZMdvXWbYWPHJimGW347-bzlX8XOBzUgSos248vME6ok3OP32OkW7q4PHZPinsNfPfvwjUD8bm1PPabBnTyDOtNa7w7nERl_cvpNyXvJ22FoXpvYfTPK1QMsNc_Zn3kSteO6nuEpC85rKtTsaJfOywUg'; // Replace with your actual token
             const player = new Spotify.Player({
                 name: 'Unique Spotify Web Playback Player',
@@ -84,6 +85,8 @@
                     } else {
                         console.error('Failed to transfer playback');
                     }
+                }).catch(error => {
+                    console.error('Error in fetch request:', error);
                 });
             }
 
@@ -138,6 +141,7 @@
     <!-- Initialize player on image click -->
     <script>
         document.getElementById('clickable-image').addEventListener('click', () => {
+            console.log('Clickable image clicked');
             document.getElementById('spotify-player').style.display = 'block'; // Show the player container
             if (window.onSpotifyWebPlaybackSDKReady) {
                 window.onSpotifyWebPlaybackSDKReady(); // Initialize the player
