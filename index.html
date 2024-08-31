@@ -8,7 +8,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: url('/static/image1.jpg') no-repeat center center fixed;
+            background: url('static/image1.jpg') no-repeat center center fixed;
             background-size: cover;
         }
         .spotify-widget {
@@ -30,7 +30,7 @@
     </style>
 </head>
 <body>
-    <img src="/static/clickable-image.png" class="clickable-image" style="top: {{ position['top'] }}; left: {{ position['left'] }};" onclick="showSpotifyWidget()">
+    <img src="static/clickable-image.png" class="clickable-image" style="top: {{ position['top'] }}; left: {{ position['left'] }};" onclick="showSpotifyWidget()">
 
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
