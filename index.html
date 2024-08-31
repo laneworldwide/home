@@ -110,15 +110,18 @@
             }, 10); // Ensure opacity change is detected
         }
 
-        // Detect when the iframe is interacted with
-        document.getElementById('spotify-widget').addEventListener('load', function() {
-            this.contentWindow.addEventListener('focus', function() {
-                document.body.classList.add('strobe-effect');
-            });
-            this.contentWindow.addEventListener('blur', function() {
+        // Page Visibility API for strobe effect
+        function handleVisibilityChange() {
+            if (document.hidden) {
                 document.body.classList.remove('strobe-effect');
-            });
-        });
+            } else {
+                document.body.classList.add('strobe-effect');
+            }
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        document.addEventListener('DOMContentLoaded', handleVisibilityChange);
     </script>
 </body>
 </html>
+
