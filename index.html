@@ -52,21 +52,27 @@
             transform: translateX(0); /* Move into the screen */
         }
 
-        /* Strobe effect styles */
-        .strobe-effect {
-            animation: strobe 0.1s infinite;
+        .click-text {
+            position: absolute;
+            width: 200px; /* Adjust size as needed */
+            text-align: center;
+            font-size: 24px;
+            color: white;
+            opacity: 0; /* Start invisible */
+            transform: translateY(-100%); /* Start off-screen */
+            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
         }
 
-        @keyframes strobe {
-            0% { background-color: white; }
-            50% { background-color: black; }
-            100% { background-color: white; }
+        .click-text.visible {
+            opacity: 1; /* Make the text visible */
+            transform: translateY(0); /* Move into the screen */
         }
     </style>
 </head>
 <body>
     <div class="background-image" id="backgroundImage"></div>
     <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
+    <div class="click-text" id="clickText">CLICK ME!</div>
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
     <script>
@@ -77,11 +83,13 @@
             const backgroundImage = document.getElementById('backgroundImage');
             backgroundImage.style.opacity = 1; // Fade in the background image
 
-            // Show the clickable image half a second sooner
+            // Show the clickable image and text
             setTimeout(function() {
                 const img = document.getElementById('randomImage');
                 img.classList.add('visible');
-            }, 1999); // Reduced timing to make the image appear 0.5 seconds sooner
+                const text = document.getElementById('clickText');
+                text.classList.add('visible');
+            }, 1999); // Reduced timing to make the image and text appear 0.5 seconds sooner
         });
 
         // Random image position script
@@ -109,18 +117,6 @@
                 widget.style.opacity = 1;
             }, 10); // Ensure opacity change is detected
         }
-
-        // Page Visibility API for strobe effect
-        function handleVisibilityChange() {
-            if (document.hidden) {
-                document.body.classList.remove('strobe-effect');
-            } else {
-                document.body.classList.add('strobe-effect');
-            }
-        }
-
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        document.addEventListener('DOMContentLoaded', handleVisibilityChange);
     </script>
 </body>
 </html>
