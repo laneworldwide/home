@@ -10,7 +10,6 @@
             margin: 0;
             padding: 0;
             background-color: black; /* Start with black */
-            transition: background-color 3s ease-in-out;
             overflow: hidden; /* Prevent scrollbars due to image overflow */
         }
 
@@ -23,49 +22,30 @@
             background: url('static/image1.jpg') no-repeat center center fixed;
             background-size: cover;
             opacity: 0;
-            transition: opacity 3s ease-in-out; /* Extended duration for smoother transition */
-        }
-
-        .spotify-widget {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 380px;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
+            transition: opacity 3s ease-in-out;
         }
 
         .clickable-container {
             position: absolute;
-            width: 200px; /* Adjust size as needed */
             text-align: center;
-            transform: translateX(-100%); /* Start off-screen */
+            transform: translate(-100%, -100%); /* Start off-screen */
             transition: transform 2s ease-in-out; /* Slide in effect */
         }
 
         .clickable-image {
-            width: 100%; /* Make image fill the container */
+            width: 200px; /* Adjust size as needed */
             cursor: pointer;
-            opacity: 0; /* Start invisible */
-            transition: opacity 2s ease-in-out; /* Fade in effect */
         }
 
         .click-text {
             font-size: 24px;
             color: white;
-            opacity: 0; /* Start invisible */
-            transition: opacity 2s ease-in-out; /* Fade in effect */
+            margin-bottom: 10px; /* Space between text and image */
         }
 
-        .clickable-container.visible {
-            transform: translateX(0); /* Move into the screen */
-        }
-
-        .clickable-image.visible, .click-text.visible {
+        .visible {
             opacity: 1; /* Make visible */
+            transform: translate(0, 0); /* Move into the screen */
         }
     </style>
 </head>
@@ -113,8 +93,8 @@
 
             // Set the container position
             container.style.left = `${randomX}px`;
-            container.style.top = `${randomY - 30}px`; // Adjust the Y position to place text above image
-            console.log(`Position set to: left=${randomX}px, top=${randomY - 30}px`);
+            container.style.top = `${randomY}px`; // Adjust the Y position to place text above image
+            console.log(`Position set to: left=${randomX}px, top=${randomY}px`);
         });
 
         // Spotify widget display function
