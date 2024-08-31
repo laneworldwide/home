@@ -67,8 +67,7 @@
 <body>
     <div class="background-image" id="backgroundImage"></div>
     <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
-
-    <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media" onload="addStrobeEffect()" onmouseleave="removeStrobeEffect()"></iframe>
+    <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
     <script>
         window.addEventListener('load', function() {
@@ -108,6 +107,9 @@
             widget.style.display = 'block';
             setTimeout(function() {
                 widget.style.opacity = 1;
+                // Add event listeners for strobe effect
+                widget.addEventListener('mouseenter', addStrobeEffect);
+                widget.addEventListener('mouseleave', removeStrobeEffect);
             }, 10); // Ensure opacity change is detected
         }
 
@@ -123,4 +125,3 @@
     </script>
 </body>
 </html>
-
