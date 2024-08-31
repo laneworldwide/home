@@ -10,6 +10,7 @@
             padding: 0;
             background: url('static/image1.jpg') no-repeat center center fixed;
             background-size: cover;
+            overflow: hidden; /* Prevent scrollbars due to image overflow */
         }
         .spotify-widget {
             display: none;
@@ -30,11 +31,27 @@
     </style>
 </head>
 <body>
-    <img src="static/clickable-image.png" class="clickable-image" style="top: {{ position['top'] }}; left: {{ position['left'] }};" onclick="showSpotifyWidget()">
+    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
 
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const img = document.getElementById('randomImage');
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const imgWidth = img.offsetWidth;
+            const imgHeight = img.offsetHeight;
+
+            // Generate random position within the viewport
+            const randomX = Math.floor(Math.random() * (viewportWidth - imgWidth));
+            const randomY = Math.floor(Math.random() * (viewportHeight - imgHeight));
+
+            // Set the image position
+            img.style.left = `${randomX}px`;
+            img.style.top = `${randomY}px`;
+        });
+
         function showSpotifyWidget() {
             var widget = document.getElementById('spotify-widget');
             widget.style.display = 'block';
