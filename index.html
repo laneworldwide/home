@@ -9,18 +9,18 @@
         body {
             margin: 0;
             padding: 0;
-            background: black; /* Start with a black background */
+            background: black; /* Start with black */
             opacity: 0; /* Start invisible */
-            transition: opacity 2s ease-in-out, background-color 4s ease-in-out;
+            transition: background-color 2s ease-in-out, opacity 2s ease-in-out;
             overflow: hidden; /* Prevent scrollbars due to image overflow */
         }
 
-        body.fade-in {
-            opacity: 1; /* Fade to visible */
-            background: purple; /* Transition to purple */
+        .fade-to-purple {
+            opacity: 1;
+            background-color: purple; /* Transition to purple */
         }
 
-        body.final-background {
+        .final-background {
             background: url('static/image1.jpg') no-repeat center center fixed; /* Final background */
             background-size: cover;
         }
@@ -50,14 +50,15 @@
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
     <script>
-        // Fade-in effect on page load
         window.addEventListener('load', function() {
-            document.body.classList.add('fade-in');
+            // Start the transition to purple
+            document.body.classList.add('fade-to-purple');
 
-            // Transition to the final background after the purple phase
+            // After the transition to purple, change to the final background image
             setTimeout(function() {
+                document.body.classList.remove('fade-to-purple');
                 document.body.classList.add('final-background');
-            }, 4000); // Adjust timing for smooth transition
+            }, 2000); // Wait 2 seconds for the transition to purple before switching to the final background
         });
 
         // Random image position script
@@ -70,5 +71,21 @@
 
             // Generate random position within the viewport
             const randomX = Math.floor(Math.random() * (viewportWidth - imgWidth));
-            const randomY = Math.floor
+            const randomY = Math.floor(Math.random() * (viewportHeight - imgHeight));
 
+            // Set the image position
+            img.style.left = `${randomX}px`;
+            img.style.top = `${randomY}px`;
+        });
+
+        // Spotify widget display function
+        function showSpotifyWidget() {
+            var widget = document.getElementById('spotify-widget');
+            widget.style.display = 'block';
+            setTimeout(function() {
+                widget.style.opacity = 1;
+            }, 10); // Ensure opacity change is detected
+        }
+    </script>
+</body>
+</html>
