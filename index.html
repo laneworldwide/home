@@ -27,7 +27,7 @@
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script>
         window.onSpotifyWebPlaybackSDKReady = () => {
-            const token = 'YOUR_SPOTIFY_ACCESS_TOKEN'; // Replace with your access token
+            const token = 'BQDbV-0XT6gn3SzPNv7iPKYbUW5sJqM16b_yDSBt1Yrmb_hFdubZMdvXWbYWPHJimGW347-bzlX8XOBzUgSos248vME6ok3OP32OkW7q4PHZPinsNfPfvwjUD8bm1PPabBnTyDOtNa7w7nERl_cvpNyXvJ22FoXpvYfTPK1QMsNc_Zn3kSteO6nuEpC85rKtTsaJfOywUg'; // Replace with your access token
             const player = new Spotify.Player({
                 name: 'Web Playback SDK Player',
                 getOAuthToken: cb => { cb(token); },
