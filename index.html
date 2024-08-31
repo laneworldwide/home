@@ -10,6 +10,7 @@
             margin: 0;
             padding: 0;
             background-color: black; /* Start with black */
+            transition: background-color 3s ease-in-out;
             overflow: hidden; /* Prevent scrollbars due to image overflow */
         }
 
@@ -22,84 +23,102 @@
             background: url('static/image1.jpg') no-repeat center center fixed;
             background-size: cover;
             opacity: 0;
-            transition: opacity 3s ease-in-out;
+            transition: opacity 3s ease-in-out; /* Extended duration for smoother transition */
         }
 
-        .clickable-container {
-            position: absolute;
-            text-align: center;
-            transform: translate(-100%, -100%); /* Start off-screen */
-            transition: transform 2s ease-in-out; /* Slide in effect */
+        .spotify-widget {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 380px;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
         }
 
         .clickable-image {
+            position: absolute;
             width: 200px; /* Adjust size as needed */
             cursor: pointer;
+            opacity: 0; /* Start invisible */
+            transform: translate(-100%, -100%); /* Start off-screen */
+            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
         }
 
-        .click-text {
-            font-size: 24px;
-            color: white;
-            margin-bottom: 10px; /* Space between text and image */
-        }
-
-        .visible {
-            opacity: 1; /* Make visible */
+        .clickable-image.visible {
+            opacity: 1; /* Make the clickable image visible */
             transform: translate(0, 0); /* Move into the screen */
+        }
+
+        .click-me-text {
+            position: absolute;
+            cursor: pointer;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            opacity: 0; /* Start invisible */
+            transform: translate(-100%, -100%); /* Start off-screen */
+            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
+        }
+
+        .click-me-text.visible {
+            opacity: 1; /* Make the text visible */
+            transform: translate(0, 0); /* Move into view */
         }
     </style>
 </head>
 <body>
     <div class="background-image" id="backgroundImage"></div>
+    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
+    <div id="clickMeText" class="click-me-text">CLICK ME!</div>
     
-    <div id="clickableContainer" class="clickable-container">
-        <div class="click-text" id="clickText">CLICK ME!</div>
-        <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
-    </div>
-
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
     <script>
         window.addEventListener('load', function() {
-            console.log('Page loaded');
-            
             // Transition to purple and gradually show the background image
             document.body.style.backgroundColor = 'purple';
 
             const backgroundImage = document.getElementById('backgroundImage');
             backgroundImage.style.opacity = 1; // Fade in the background image
 
-            // Show the clickable container
+            // Show the clickable image and text with transitions
             setTimeout(function() {
-                const container = document.getElementById('clickableContainer');
-                container.classList.add('visible');
-                console.log('Clickable container made visible');
+                const img = document.getElementById('randomImage');
+                const text = document.getElementById('clickMeText');
+                img.classList.add('visible');
+                text.classList.add('visible');
             }, 1999); // Reduced timing to make the image and text appear 0.5 seconds sooner
         });
 
         // Random image position script
         document.addEventListener("DOMContentLoaded", function() {
-            console.log('DOM content loaded');
-            const container = document.getElementById('clickableContainer');
             const img = document.getElementById('randomImage');
+            const text = document.getElementById('clickMeText');
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
             const imgWidth = img.offsetWidth;
             const imgHeight = img.offsetHeight;
+            const textWidth = text.offsetWidth;
+            const textHeight = text.offsetHeight;
 
             // Generate random position within the viewport
             const randomX = Math.floor(Math.random() * (viewportWidth - imgWidth));
             const randomY = Math.floor(Math.random() * (viewportHeight - imgHeight));
 
-            // Set the container position
-            container.style.left = `${randomX}px`;
-            container.style.top = `${randomY}px`; // Adjust the Y position to place text above image
-            console.log(`Position set to: left=${randomX}px, top=${randomY}px`);
+            // Set the image position
+            img.style.left = `${randomX}px`;
+            img.style.top = `${randomY}px`;
+
+            // Set the text position directly above the image
+            text.style.left = `${randomX}px`;
+            text.style.top = `${randomY - textHeight}px`;
         });
 
         // Spotify widget display function
         function showSpotifyWidget() {
-            console.log('Spotify widget clicked');
             var widget = document.getElementById('spotify-widget');
             widget.style.display = 'block';
             setTimeout(function() {
@@ -109,4 +128,5 @@
     </script>
 </body>
 </html>
+
 
