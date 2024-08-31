@@ -73,6 +73,11 @@
             opacity: 0; /* Fade out the text */
             transform: translate(-100%, -100%); /* Optional: slide out if needed */
         }
+
+        .clickable-image.fade-out {
+            opacity: 0; /* Fade out the image */
+            transform: translate(-100%, -100%); /* Optional: slide out if needed */
+        }
     </style>
 </head>
 <body>
@@ -123,7 +128,7 @@
             text.style.top = `${randomY - textHeight}px`;
         });
 
-        // Spotify widget display function
+        // Handle click event on the image
         function showSpotifyWidget() {
             var widget = document.getElementById('spotify-widget');
             widget.style.display = 'block';
@@ -131,9 +136,15 @@
                 widget.style.opacity = 1;
             }, 10); // Ensure opacity change is detected
             
-            // Fade out the "CLICK ME!" text after clicking the image
+            // Fade out the "CLICK ME!" text and image after clicking the image
+            const img = document.getElementById('randomImage');
             const text = document.getElementById('clickMeText');
             text.classList.add('fade-out');
+            img.classList.add('fade-out');
+            setTimeout(function() {
+                img.style.display = 'none'; // Hide image after fade out
+                text.style.display = 'none'; // Hide text after fade out
+            }, 2000); // Match the fade-out duration
         }
     </script>
 </body>
