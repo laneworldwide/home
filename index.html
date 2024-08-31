@@ -9,11 +9,10 @@
         body {
             margin: 0;
             padding: 0;
-            background: purple;
-            background-size: cover;
-            overflow: hidden; /* Prevent scrollbars due to image overflow */
+            background: black; /* Start with a black background */
             opacity: 0; /* Start invisible */
             transition: opacity 2s ease-in-out, background-color 2s ease-in-out;
+            overflow: hidden; /* Prevent scrollbars due to image overflow */
         }
 
         body.fade-in {
@@ -33,6 +32,7 @@
             opacity: 0;
             transition: opacity 2s ease-in-out;
         }
+
         .clickable-image {
             position: absolute;
             width: 200px; /* Adjust size as needed */
