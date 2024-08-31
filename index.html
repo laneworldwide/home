@@ -9,20 +9,21 @@
         body {
             margin: 0;
             padding: 0;
-            background: black; /* Start with black */
-            opacity: 0; /* Start invisible */
-            transition: background-color 2s ease-in-out, opacity 2s ease-in-out;
+            background-color: black; /* Start with black */
+            transition: background-color 3s ease-in-out;
             overflow: hidden; /* Prevent scrollbars due to image overflow */
         }
 
-        .fade-to-purple {
-            opacity: 1;
-            background-color: purple; /* Transition to purple */
-        }
-
-        .final-background {
-            background: url('static/image1.jpg') no-repeat center center fixed; /* Final background */
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('static/image1.jpg') no-repeat center center fixed;
             background-size: cover;
+            opacity: 0;
+            transition: opacity 3s ease-in-out; /* Extended duration for smoother transition */
         }
 
         .spotify-widget {
@@ -42,34 +43,35 @@
             width: 200px; /* Adjust size as needed */
             cursor: pointer;
             opacity: 0; /* Start invisible */
-            transition: opacity 2s ease-in-out; /* Fade in effect */
+            transform: translateX(-100%); /* Start off-screen */
+            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
         }
 
         .clickable-image.visible {
             opacity: 1; /* Make the clickable image visible */
+            transform: translateX(0); /* Move into the screen */
         }
     </style>
 </head>
 <body>
+    <div class="background-image" id="backgroundImage"></div>
     <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
 
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
     <script>
         window.addEventListener('load', function() {
-            // Start the transition to purple
-            document.body.classList.add('fade-to-purple');
+            // Transition to purple and gradually show the background image
+            document.body.style.backgroundColor = 'purple';
 
-            // After the transition to purple, change to the final background image
+            const backgroundImage = document.getElementById('backgroundImage');
+            backgroundImage.style.opacity = 1; // Fade in the background image
+
+            // Show the clickable image once the background is fully visible
             setTimeout(function() {
-                document.body.classList.remove('fade-to-purple');
-                document.body.classList.add('final-background');
-                document.body.style.opacity = 1;
-
-                // Show the clickable image once the final background is set
                 const img = document.getElementById('randomImage');
                 img.classList.add('visible');
-            }, 2000); // Adjust this timing as needed
+            }, 3000); // Adjusted timing to match the background transition
         });
 
         // Random image position script
@@ -100,4 +102,5 @@
     </script>
 </body>
 </html>
+
 
