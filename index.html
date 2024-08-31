@@ -67,6 +67,11 @@
             opacity: 1; /* Make the text visible */
             transform: translate(0, 0); /* Move into view */
         }
+
+        .click-me-text.fade-out {
+            opacity: 0; /* Fade out the text */
+            transform: translate(-100%, -100%); /* Optional: slide out if needed */
+        }
     </style>
 </head>
 <body>
@@ -124,9 +129,14 @@
             setTimeout(function() {
                 widget.style.opacity = 1;
             }, 10); // Ensure opacity change is detected
+            
+            // Fade out the "CLICK ME!" text after clicking the image
+            const text = document.getElementById('clickMeText');
+            text.classList.add('fade-out');
         }
     </script>
 </body>
 </html>
+
 
 
