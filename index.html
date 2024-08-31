@@ -61,6 +61,7 @@
             opacity: 0; /* Start invisible */
             transform: translate(-100%, -100%); /* Start off-screen */
             transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
+            white-space: nowrap; /* Prevent text from wrapping */
         }
 
         .click-me-text.visible {
@@ -117,8 +118,8 @@
             img.style.left = `${randomX}px`;
             img.style.top = `${randomY}px`;
 
-            // Set the text position directly above the image
-            text.style.left = `${randomX}px`;
+            // Center the text above the image
+            text.style.left = `${randomX + (imgWidth / 2) - (textWidth / 2)}px`;
             text.style.top = `${randomY - textHeight}px`;
         });
 
@@ -137,6 +138,7 @@
     </script>
 </body>
 </html>
+
 
 
 
