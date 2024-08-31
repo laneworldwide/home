@@ -33,11 +33,13 @@
     <!-- Placeholder for Spotify's SDK -->
     <div id="spotify-player"></div>
 
-    <!-- Define onSpotifyWebPlaybackSDKReady function before loading the SDK -->
+    <!-- Load the Spotify Web Playback SDK -->
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+
+    <!-- Define onSpotifyWebPlaybackSDKReady function -->
     <script>
         window.onSpotifyWebPlaybackSDKReady = () => {
-            const token = 'BQDbV-0XT6gn3SzPNv7iPKYbUW5sJqM16b_yDSBt1Yrmb_hFdubZMdvXWbYWPHJimGW347-bzlX8XOBzUgSos248vME6ok3OP32OkW7q4PHZPinsNfPfvwjUD8bm1PPabBnTyDOtNa7w7nERl_cvpNyXvJ22FoXpvYfTPK1QMsNc_Zn3kSteO6nuEpC85rKtTsaJfOywUg
-'; // Replace with your actual token
+            const token = 'BQDbV-0XT6gn3SzPNv7iPKYbUW5sJqM16b_yDSBt1Yrmb_hFdubZMdvXWbYWPHJimGW347-bzlX8XOBzUgSos248vME6ok3OP32OkW7q4PHZPinsNfPfvwjUD8bm1PPabBnTyDOtNa7w7nERl_cvpNyXvJ22FoXpvYfTPK1QMsNc_Zn3kSteO6nuEpC85rKtTsaJfOywUg'; // Replace with your actual token
             const player = new Spotify.Player({
                 name: 'Web Playback SDK Player',
                 getOAuthToken: cb => { cb(token); },
@@ -126,22 +128,17 @@
             }
         };
     </script>
-
-    <!-- Load the Spotify Web Playback SDK -->
-    <script src="https://sdk.scdn.co/spotify-player.js"></script>
     
     <!-- Optional: Initialize player on image click -->
     <script>
         document.getElementById('clickable-image').addEventListener('click', () => {
             document.getElementById('spotify-player').style.display = 'block'; // Show the player container
-            initializePlayer(); // Initialize the player
+            if (window.onSpotifyWebPlaybackSDKReady) {
+                window.onSpotifyWebPlaybackSDKReady(); // Initialize the player
+            } else {
+                console.error('Spotify Web Playback SDK is not ready.');
+            }
         });
-
-        function initializePlayer() {
-            if (window.playerInitialized) return; // Prevent re-initialization
-            window.onSpotifyWebPlaybackSDKReady();
-            window.playerInitialized = true;
-        }
     </script>
 </body>
 </html>
