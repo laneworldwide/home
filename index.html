@@ -9,10 +9,19 @@
         body {
             margin: 0;
             padding: 0;
-            background: url('static/image1.jpg') no-repeat center center fixed;
+            background: purple;
             background-size: cover;
             overflow: hidden; /* Prevent scrollbars due to image overflow */
+            opacity: 0; /* Start invisible */
+            transition: opacity 2s ease-in-out, background-color 2s ease-in-out;
         }
+
+        body.fade-in {
+            opacity: 1; /* Fade to visible */
+            background: url('static/image1.jpg') no-repeat center center fixed; /* Final background */
+            background-size: cover;
+        }
+
         .spotify-widget {
             display: none;
             position: fixed;
@@ -37,6 +46,12 @@
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
     <script>
+        // Fade-in effect on page load
+        window.addEventListener('load', function() {
+            document.body.classList.add('fade-in');
+        });
+
+        // Random image position script
         document.addEventListener("DOMContentLoaded", function() {
             const img = document.getElementById('randomImage');
             const viewportWidth = window.innerWidth;
@@ -53,6 +68,7 @@
             img.style.top = `${randomY}px`;
         });
 
+        // Spotify widget display function
         function showSpotifyWidget() {
             var widget = document.getElementById('spotify-widget');
             widget.style.display = 'block';
