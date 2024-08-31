@@ -38,47 +38,24 @@
             transition: opacity 2s ease-in-out;
         }
 
-        .clickable-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            opacity: 0; /* Start invisible */
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide effect */
-        }
-
         .clickable-image {
+            position: absolute;
             width: 200px; /* Adjust size as needed */
             cursor: pointer;
             opacity: 0; /* Start invisible */
-            transform: translateY(20px); /* Start slightly below the final position */
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide effect */
+            transform: translateX(-100%); /* Start off-screen */
+            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
         }
 
-        .clickable-text {
-            color: white;
-            font-size: 24px;
-            margin-bottom: 10px;
-            opacity: 0; /* Start invisible */
-            transform: translateY(-20px); /* Start slightly above the final position */
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide effect */
-        }
-
-        .clickable-container.visible .clickable-text,
-        .clickable-container.visible .clickable-image {
-            opacity: 1; /* Make both elements visible */
-            transform: translateY(0); /* Move into final position */
+        .clickable-image.visible {
+            opacity: 1; /* Make the clickable image visible */
+            transform: translateX(0); /* Move into the screen */
         }
     </style>
 </head>
 <body>
     <div class="background-image" id="backgroundImage"></div>
-
-    <div class="clickable-container" id="clickableContainer">
-        <div class="clickable-text">CLICK ME!</div>
-        <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
-    </div>
+    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
 
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
@@ -90,11 +67,11 @@
             const backgroundImage = document.getElementById('backgroundImage');
             backgroundImage.style.opacity = 1; // Fade in the background image
 
-            // Show the clickable container with text and image
+            // Show the clickable image half a second sooner
             setTimeout(function() {
-                const container = document.getElementById('clickableContainer');
-                container.classList.add('visible');
-            }, 1999); // Timing to make the container appear 0.5 seconds sooner
+                const img = document.getElementById('randomImage');
+                img.classList.add('visible');
+            }, 1999); // Reduced timing to make the image appear 0.5 seconds sooner
         });
 
         // Random image position script
