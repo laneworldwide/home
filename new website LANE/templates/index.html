@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LANE</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('/static/image1.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .spotify-widget {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 380px;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+        .clickable-image {
+            position: absolute;
+            width: 200px; /* Adjust size as needed */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <img src="/static/clickable-image.png" class="clickable-image" style="top: {{ position['top'] }}; left: {{ position['left'] }};" onclick="showSpotifyWidget()">
+
+    <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+    <script>
+        function showSpotifyWidget() {
+            var widget = document.getElementById('spotify-widget');
+            widget.style.display = 'block';
+            setTimeout(function() {
+                widget.style.opacity = 1;
+            }, 10); // Ensure opacity change is detected
+        }
+    </script>
+</body>
+</html>
