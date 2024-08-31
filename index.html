@@ -38,24 +38,41 @@
             transition: opacity 2s ease-in-out;
         }
 
-        .clickable-image {
+        .clickable-container {
             position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .clickable-text {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .clickable-image {
             width: 200px; /* Adjust size as needed */
             cursor: pointer;
             opacity: 0; /* Start invisible */
-            transform: translateX(-100%); /* Start off-screen */
+            transform: translateY(50px); /* Start slightly below the text */
             transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
         }
 
         .clickable-image.visible {
             opacity: 1; /* Make the clickable image visible */
-            transform: translateX(0); /* Move into the screen */
+            transform: translateY(0); /* Move into position */
         }
     </style>
 </head>
 <body>
     <div class="background-image" id="backgroundImage"></div>
-    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
+
+    <div class="clickable-container">
+        <div class="clickable-text">CLICK ME!</div>
+        <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
+    </div>
 
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
@@ -102,5 +119,4 @@
     </script>
 </body>
 </html>
-
 
