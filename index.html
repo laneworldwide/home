@@ -78,6 +78,30 @@
             opacity: 0; /* Fade out the image */
             transform: translate(-100%, -100%); /* Optional: slide out if needed */
         }
+
+        /* Strobe effect */
+        .strobe {
+            animation: strobe 0.1s infinite; /* Adjust timing for strobe effect */
+        }
+
+        @keyframes strobe {
+            0% { background-color: white; }
+            50% { background-color: black; }
+            100% { background-color: white; }
+        }
+
+        /* Toggle button */
+        .toggle-button {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -86,6 +110,8 @@
     <div id="clickMeText" class="click-me-text">CLICK ME!</div>
     
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+    <button id="toggleStrobe" class="toggle-button" onclick="toggleStrobe()">Toggle Strobe Effect</button>
 
     <script>
         window.addEventListener('load', function() {
@@ -101,7 +127,7 @@
                 const text = document.getElementById('clickMeText');
                 img.classList.add('visible');
                 text.classList.add('visible');
-            }, 1444); // Reduced timing to make the image and text appear 0.5 seconds sooner
+            }, 1999); // Reduced timing to make the image and text appear 0.5 seconds sooner
         });
 
         // Random image position script
@@ -134,6 +160,7 @@
             widget.style.display = 'block';
             setTimeout(function() {
                 widget.style.opacity = 1;
+                document.body.classList.add('strobe'); // Start strobe effect
             }, 10); // Ensure opacity change is detected
             
             // Fade out the "CLICK ME!" text and image after clicking the image
@@ -146,7 +173,11 @@
                 text.style.display = 'none'; // Hide text after fade out
             }, 2000); // Match the fade-out duration
         }
+
+        // Toggle strobe effect
+        function toggleStrobe() {
+            document.body.classList.toggle('strobe');
+        }
     </script>
 </body>
 </html>
-
