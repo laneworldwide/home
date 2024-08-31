@@ -81,6 +81,8 @@
 
     <script>
         window.addEventListener('load', function() {
+            console.log('Page loaded');
+            
             // Transition to purple and gradually show the background image
             document.body.style.backgroundColor = 'purple';
 
@@ -91,11 +93,13 @@
             setTimeout(function() {
                 const container = document.getElementById('clickableContainer');
                 container.classList.add('visible');
+                console.log('Clickable container made visible');
             }, 1999); // Reduced timing to make the image and text appear 0.5 seconds sooner
         });
 
         // Random image position script
         document.addEventListener("DOMContentLoaded", function() {
+            console.log('DOM content loaded');
             const container = document.getElementById('clickableContainer');
             const img = document.getElementById('randomImage');
             const viewportWidth = window.innerWidth;
@@ -110,10 +114,12 @@
             // Set the container position
             container.style.left = `${randomX}px`;
             container.style.top = `${randomY - 30}px`; // Adjust the Y position to place text above image
+            console.log(`Position set to: left=${randomX}px, top=${randomY - 30}px`);
         });
 
         // Spotify widget display function
         function showSpotifyWidget() {
+            console.log('Spotify widget clicked');
             var widget = document.getElementById('spotify-widget');
             widget.style.display = 'block';
             setTimeout(function() {
