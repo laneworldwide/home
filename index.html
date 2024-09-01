@@ -48,7 +48,7 @@
             transition: opacity 2s ease-in-out;
         }
 
-        .clickable-image {
+        .clickable-image, .clickable-image2 {
             position: absolute;
             width: 200px; /* Adjust size as needed */
             cursor: pointer;
@@ -57,7 +57,7 @@
             transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
         }
 
-        .clickable-image.visible {
+        .clickable-image.visible, .clickable-image2.visible {
             opacity: 1; /* Make the clickable image visible */
             transform: translate(0, 0); /* Move into the screen */
         }
@@ -79,13 +79,8 @@
             transform: translate(0, 0); /* Move into view */
         }
 
-        .click-me-text.fade-out {
-            opacity: 0; /* Fade out the text */
-            transform: translate(-100%, -100%); /* Optional: slide out if needed */
-        }
-
-        .clickable-image.fade-out {
-            opacity: 0; /* Fade out the image */
+        .click-me-text.fade-out, .clickable-image.fade-out {
+            opacity: 0; /* Fade out the element */
             transform: translate(-100%, -100%); /* Optional: slide out if needed */
         }
 
@@ -114,7 +109,8 @@
 </head>
 <body>
     <div class="background-image" id="backgroundImage"></div>
-    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
+    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSecondImage()">
+    <img src="static/clickable-image2.png" id="secondImage" class="clickable-image2">
     <div id="clickMeText" class="click-me-text">CLICK ME!</div>
     
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
@@ -164,23 +160,39 @@
             text.style.top = `${randomY - textHeight}px`;
         });
 
-        // Handle click event on the image
-        function showSpotifyWidget() {
-            var widget = document.getElementById('spotify-widget');
-            widget.style.display = 'block';
+        // Handle click event on the first image
+        function showSecondImage() {
+            const secondImg = document.getElementById('secondImage');
+            const widget = document.getElementById('spotify-widget');
+
+            // Show the second clickable image after clicking the first
+            secondImg.style.display = 'block';
+
             setTimeout(function() {
-                widget.style.opacity = 1;
-            }, 10); // Ensure opacity change is detected
+                secondImg.classList.add('visible');
+            }, 10); // Delay to allow the visibility transition to take effect
             
-            // Fade out the "CLICK ME!" text and image after clicking the image
-            const img = document.getElementById('randomImage');
-            const text = document.getElementById('clickMeText');
-            text.classList.add('fade-out');
-            img.classList.add('fade-out');
-            setTimeout(function() {
-                img.style.display = 'none'; // Hide image after fade out
-                text.style.display = 'none'; // Hide text after fade out
-            }, 2000); // Match the fade-out duration
+            // Move the second image to a new position, avoiding the Spotify widget
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const imgWidth = secondImg.offsetWidth;
+            const imgHeight = secondImg.offsetHeight;
+
+            // Generate a random position that doesn't overlap with the Spotify widget
+            let randomX, randomY;
+            do {
+                randomX = Math.floor(Math.random() * (viewportWidth - imgWidth));
+                randomY = Math.floor(Math.random() * (viewportHeight - imgHeight));
+            } while (
+                randomX < widget.offsetLeft + widget.offsetWidth &&
+                randomX + imgWidth > widget.offsetLeft &&
+                randomY < widget.offsetTop + widget.offsetHeight &&
+                randomY + imgHeight > widget.offsetTop
+            );
+
+            // Set the second image position
+            secondImg.style.left = `${randomX}px`;
+            secondImg.style.top = `${randomY}px`;
         }
 
         // Toggle strobe effect
