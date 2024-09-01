@@ -97,11 +97,8 @@
             text-align: center;
             opacity: 0; /* Start invisible */
             transition: opacity 2s ease-in-out; /* Fade in effect */
-            white-space: pre-line; /* Allow text to wrap into multiple lines */
-            left: 50%;
-            transform: translateX(-50%);
-            top: calc(50% + 190px); /* Default position for desktop */
-            z-index: 5; /* Ensure text is below the widget */
+            white-space: pre-line; /* Allow line breaks */
+            max-width: 90%; /* Prevent text from going off-screen */
         }
 
         .replacement-text.visible {
@@ -130,23 +127,21 @@
             transform: translateX(0); /* Move into view */
         }
 
-        /* Mobile styles */
-        @media screen and (max-width: 767px) {
-            .replacement-text {
-                position: relative;
-                top: auto; /* Reset top for mobile */
-                left: auto;
-                transform: none; /* Reset transform */
-                margin-top: 10px; /* Space between Spotify widget and text */
-                z-index: 5; /* Ensure text is below the widget */
+        /* Mobile Styles */
+        @media (max-width: 767px) {
+            .spotify-widget {
+                top: 20%; /* Adjust positioning for mobile */
+                left: 50%;
+                transform: translate(-50%, 0); /* Center horizontally */
             }
 
-            .spotify-widget {
-                position: relative; /* Ensure it remains centered on mobile */
-                top: auto;
-                left: auto;
-                transform: none;
-                z-index: 10; /* Ensure widget stays on top */
+            .replacement-text {
+                position: absolute;
+                bottom: 20px; /* Position text at the bottom */
+                left: 50%;
+                transform: translateX(-50%); /* Center horizontally */
+                width: 90%;
+                text-align: center; /* Center text within its container */
             }
         }
     </style>
@@ -227,36 +222,32 @@
         // Handle click event on the first image
         function showSpotifyWidget() {
             const widget = document.getElementById('spotify-widget');
-            const img = document.getElementById('randomImage');
             const text = document.getElementById('clickMeText');
-            const img2 = document.getElementById('randomImage2');
-            
-            // Show Spotify widget
             widget.style.display = 'block';
-            setTimeout(function() {
-                widget.style.opacity = 1; // Fade in Spotify widget
-            }, 1000);
-
-            // Hide the first image and the text
-            img.classList.add('fade-out');
+            widget.style.opacity = 1;
             text.classList.add('fade-out');
-
-            // Show the second image and Spotify widget
-            img2.classList.add('visible');
+            setTimeout(function() {
+                text.style.display = 'none';
+            }, 2000); // Fade-out duration
         }
 
         // Handle click event on the second image
         function replaceWithText() {
+            const img = document.getElementById('randomImage');
             const img2 = document.getElementById('randomImage2');
-            const replacementText = document.getElementById('replacementText');
             const widget = document.getElementById('spotify-widget');
-
-            img2.classList.add('fade-out');
-            replacementText.classList.add('visible');
-            widget.style.opacity = 1; // Ensure the Spotify widget remains visible
+            const replacementText = document.getElementById('replacementText');
+            img.classList.add('fade-out');
+            img2.classList.add('visible');
+            widget.style.opacity = 0;
+            setTimeout(function() {
+                img.style.display = 'none';
+                widget.style.display = 'none';
+                replacementText.classList.add('visible');
+            }, 2000); // Fade-out duration
         }
 
-        // Toggle the strobe effect
+        // Toggle strobe effect
         function toggleStrobe() {
             const backgroundImage = document.getElementById('backgroundImage');
             backgroundImage.classList.toggle('strobe');
@@ -264,3 +255,4 @@
     </script>
 </body>
 </html>
+
