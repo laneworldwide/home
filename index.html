@@ -48,29 +48,17 @@
             transition: opacity 2s ease-in-out;
         }
 
-        .clickable-image {
+        .clickable-image, .clickable-image2 {
             position: absolute;
             width: 200px; /* Adjust size as needed */
             cursor: pointer;
             opacity: 0; /* Start invisible */
+            transform: translate(-100%, -100%); /* Start off-screen */
             transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
         }
 
-        .clickable-image.visible {
+        .clickable-image.visible, .clickable-image2.visible {
             opacity: 1; /* Make the clickable image visible */
-            transform: translate(0, 0); /* Move into the screen */
-        }
-
-        .clickable-image2 {
-            position: absolute;
-            width: 200px; /* Adjust size as needed */
-            cursor: pointer;
-            opacity: 0; /* Start invisible */
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
-        }
-
-        .clickable-image2.visible {
-            opacity: 1; /* Make the second clickable image visible */
             transform: translate(0, 0); /* Move into the screen */
         }
 
@@ -91,30 +79,28 @@
             transform: translate(0, 0); /* Move into view */
         }
 
-        .click-me-text.fade-out {
-            opacity: 0; /* Fade out the text */
-            transform: translate(-100%, -100%); /* Optional: slide out if needed */
+        .click-me-text.fade-out, .clickable-image.fade-out {
+            opacity: 0; /* Fade out */
+            transform: translate(-100%, -100%); /* Optional: slide out */
         }
 
-        .clickable-image.fade-out {
+        .clickable-image2.fade-out {
             opacity: 0; /* Fade out the image */
-            transform: translate(-100%, -100%); /* Optional: slide out if needed */
+            transform: translate(-100%, -100%); /* Optional: slide out */
         }
 
-        /* Replacement text */
         .replacement-text {
-            position: fixed;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
+            position: absolute;
             color: white;
             font-size: 24px;
-            text-align: left;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-            z-index: 1000; /* Ensure text is above other elements */
+            text-align: center;
+            opacity: 0; /* Start invisible */
+            transition: opacity 2s ease-in-out; /* Fade in effect */
             white-space: nowrap; /* Prevent text from wrapping */
-            padding: 20px; /* Adjust as needed */
+        }
+
+        .replacement-text.visible {
+            opacity: 1; /* Fade in the text */
         }
 
         /* Toggle button */
@@ -143,10 +129,10 @@
 <body>
     <div class="background-image" id="backgroundImage"></div>
     <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
-    <div id="clickMeText" class="click-me-text">CLICK ME!</div>
     <img src="static/clickable-image2.png" id="randomImage2" class="clickable-image2" onclick="replaceWithText()">
+    <div id="clickMeText" class="click-me-text">CLICK ME!</div>
     <div id="replacementText" class="replacement-text">No available tour dates at this moment. Check back again soon!</div>
-    
+
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
     <button id="toggleStrobe" class="toggle-button" onclick="toggleStrobe()">Toggle Party Mode</button>
@@ -170,38 +156,47 @@
             }, 1000); // Reduced timing to make the elements appear 0.5 seconds sooner
         });
 
-        // Random image position script
+        // Random image position script with viewport adjustment
         document.addEventListener("DOMContentLoaded", function() {
-            const img1 = document.getElementById('randomImage');
-            const img2 = document.getElementById('randomImage2');
+            const img = document.getElementById('randomImage');
             const text = document.getElementById('clickMeText');
+            const img2 = document.getElementById('randomImage2');
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
-            const img1Width = img1.offsetWidth;
-            const img1Height = img1.offsetHeight;
-            const img2Width = img2.offsetWidth;
-            const img2Height = img2.offsetHeight;
+            const imgWidth = img.offsetWidth;
+            const imgHeight = img.offsetHeight;
             const textWidth = text.offsetWidth;
             const textHeight = text.offsetHeight;
+            const img2Width = img2.offsetWidth;
+            const img2Height = img2.offsetHeight;
 
-            // Generate random position within the viewport for the first image
-            const randomX1 = Math.floor(Math.random() * (viewportWidth - img1Width));
-            const randomY1 = Math.floor(Math.random() * (viewportHeight - img1Height));
+            // Ensure image stays within viewport
+            const randomX = Math.floor(Math.random() * (viewportWidth - imgWidth));
+            const randomY = Math.floor(Math.random() * (viewportHeight - imgHeight));
 
-            // Set the position for the first image
-            img1.style.left = `${randomX1}px`;
-            img1.style.top = `${randomY1}px`;
+            // Set positions for the first image and its text
+            img.style.left = `${randomX}px`;
+            img.style.top = `${randomY}px`;
 
-            // Center the text above the first image
-            text.style.left = `${randomX1 + (img1Width / 2) - (textWidth / 2)}px`;
-            text.style.top = `${randomY1 - textHeight}px`;
+            text.style.left = `${randomX + (imgWidth / 2) - (textWidth / 2)}px`;
+            text.style.top = `${randomY - textHeight}px`;
 
-            // Position the second clickable image to the right of the first image
-            const img2X = Math.min(viewportWidth - img2Width, randomX1 + img1Width + 20); // Ensure it fits in viewport and is not overlapping
-            const img2Y = randomY1; // Align vertically with the first image
+            // Set position for the second image
+            let randomX2, randomY2;
 
-            img2.style.left = `${img2X}px`;
-            img2.style.top = `${img2Y}px`;
+            // Prevent overlap with the Spotify widget
+            do {
+                randomX2 = Math.floor(Math.random() * (viewportWidth - img2Width));
+                randomY2 = Math.floor(Math.random() * (viewportHeight - img2Height));
+            } while (
+                randomX2 + img2Width > (viewportWidth / 2 - 150) &&
+                randomX2 < (viewportWidth / 2 + 150) &&
+                randomY2 + img2Height > (viewportHeight / 2 - 190) &&
+                randomY2 < (viewportHeight / 2 + 190)
+            );
+
+            img2.style.left = `${randomX2}px`;
+            img2.style.top = `${randomY2}px`;
         });
 
         // Handle click event on the first image
@@ -210,22 +205,22 @@
             widget.style.display = 'block';
             setTimeout(function() {
                 widget.style.opacity = 1;
-
-                const backgroundImage = document.getElementById('backgroundImage');
-                backgroundImage.classList.add('strobe'); // Start strobe effect
-
-                // Show the second clickable image after the first image is clicked
-                const img2 = document.getElementById('randomImage2');
-                img2.classList.add('visible');
             }, 10); // Ensure opacity change is detected
             
             // Fade out the "CLICK ME!" text and image after clicking the image
-            const img1 = document.getElementById('randomImage');
+            const img = document.getElementById('randomImage');
             const text = document.getElementById('clickMeText');
             text.classList.add('fade-out');
-            img1.classList.add('fade-out');
+            img.classList.add('fade-out');
+
+            // Show the second clickable image
+            const img2 = document.getElementById('randomImage2');
             setTimeout(function() {
-                img1.style.display = 'none'; // Hide image after fade out
+                img2.classList.add('visible');
+            }, 2000); // Match the fade-out duration of the first image and text
+
+            setTimeout(function() {
+                img.style.display = 'none'; // Hide image after fade out
                 text.style.display = 'none'; // Hide text after fade out
             }, 2000); // Match the fade-out duration
         }
@@ -233,23 +228,24 @@
         // Handle click event on the second image
         function replaceWithText() {
             const img2 = document.getElementById('randomImage2');
-            const replacementText = document.getElementById('replacementText');
+            const text = document.getElementById('replacementText');
 
+            // Fade out the second image
             img2.classList.add('fade-out');
+
+            // Show the replacement text
             setTimeout(function() {
-                img2.style.display = 'none'; // Hide second image after fade out
-                replacementText.classList.add('visible'); // Show replacement text
+                text.style.left = img2.style.left; // Position the text at the same spot as the image
+                text.style.top = img2.style.top;
+                text.classList.add('visible');
+                img2.style.display = 'none'; // Hide the image after fade out
             }, 2000); // Match the fade-out duration
         }
 
-        // Toggle strobe effect
+        // Handle strobe toggle
         function toggleStrobe() {
             const backgroundImage = document.getElementById('backgroundImage');
-            if (backgroundImage.classList.contains('strobe')) {
-                backgroundImage.classList.remove('strobe'); // Remove strobe effect
-            } else {
-                backgroundImage.classList.add('strobe'); // Add strobe effect
-            }
+            backgroundImage.classList.toggle('strobe');
         }
     </script>
 </body>
