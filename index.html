@@ -46,6 +46,7 @@
             height: 380px;
             opacity: 0;
             transition: opacity 2s ease-in-out;
+            z-index: 10; /* Ensure widget is above other elements */
         }
 
         .clickable-image, .clickable-image2 {
@@ -100,6 +101,7 @@
             left: 50%;
             transform: translateX(-50%);
             top: calc(50% + 190px); /* Default position for desktop */
+            z-index: 5; /* Ensure text is below the widget */
         }
 
         .replacement-text.visible {
@@ -132,10 +134,11 @@
         @media screen and (max-width: 767px) {
             .replacement-text {
                 position: relative;
-                top: 10px; /* Adjust position to be below the Spotify widget */
-                left: 0;
+                top: auto; /* Reset top for mobile */
+                left: auto;
                 transform: none; /* Reset transform */
                 margin-top: 10px; /* Space between Spotify widget and text */
+                z-index: 5; /* Ensure text is below the widget */
             }
 
             .spotify-widget {
@@ -143,6 +146,7 @@
                 top: auto;
                 left: auto;
                 transform: none;
+                z-index: 10; /* Ensure widget stays on top */
             }
         }
     </style>
@@ -222,20 +226,22 @@
 
         // Handle click event on the first image
         function showSpotifyWidget() {
-            var widget = document.getElementById('spotify-widget');
+            const widget = document.getElementById('spotify-widget');
+            const img = document.getElementById('randomImage');
+            const text = document.getElementById('clickMeText');
+            const img2 = document.getElementById('randomImage2');
+            
+            // Show Spotify widget
             widget.style.display = 'block';
             setTimeout(function() {
                 widget.style.opacity = 1; // Fade in Spotify widget
             }, 1000);
 
             // Hide the first image and the text
-            const img = document.getElementById('randomImage');
-            const text = document.getElementById('clickMeText');
             img.classList.add('fade-out');
             text.classList.add('fade-out');
 
             // Show the second image and Spotify widget
-            const img2 = document.getElementById('randomImage2');
             img2.classList.add('visible');
         }
 
@@ -247,7 +253,7 @@
 
             img2.classList.add('fade-out');
             replacementText.classList.add('visible');
-            widget.style.opacity = 0; // Hide the Spotify widget
+            widget.style.opacity = 1; // Ensure the Spotify widget remains visible
         }
 
         // Toggle the strobe effect
@@ -258,4 +264,3 @@
     </script>
 </body>
 </html>
-
