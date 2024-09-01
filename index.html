@@ -97,6 +97,9 @@
             opacity: 0; /* Start invisible */
             transition: opacity 2s ease-in-out; /* Fade in effect */
             white-space: pre-line; /* Allow text to wrap into multiple lines */
+            left: 50%;
+            transform: translateX(-50%);
+            top: calc(50% + 190px); /* Default position for desktop */
         }
 
         .replacement-text.visible {
@@ -125,11 +128,21 @@
             transform: translateX(0); /* Move into view */
         }
 
+        /* Mobile styles */
         @media screen and (max-width: 767px) {
             .replacement-text {
                 position: relative;
-                top: 10px; /* Adjust this value as needed */
+                top: 10px; /* Adjust position to be below the Spotify widget */
+                left: 0;
+                transform: none; /* Reset transform */
                 margin-top: 10px; /* Space between Spotify widget and text */
+            }
+
+            .spotify-widget {
+                position: relative; /* Ensure it remains centered on mobile */
+                top: auto;
+                left: auto;
+                transform: none;
             }
         }
     </style>
@@ -212,14 +225,14 @@
             var widget = document.getElementById('spotify-widget');
             widget.style.display = 'block';
             setTimeout(function() {
-                widget.style.opacity = 1;
-            }, 10); // Ensure opacity change is detected
-            
-            // Fade out the "CLICK ME!" text and image after clicking the image
+                widget.style.opacity = 1; // Fade in Spotify widget
+            }, 1000);
+
+            // Hide the first image and the text
             const img = document.getElementById('randomImage');
             const text = document.getElementById('clickMeText');
-            text.classList.add('fade-out');
             img.classList.add('fade-out');
+            text.classList.add('fade-out');
 
             // Show the second image and Spotify widget
             const img2 = document.getElementById('randomImage2');
