@@ -46,6 +46,7 @@
             height: 380px;
             opacity: 0;
             transition: opacity 2s ease-in-out;
+            z-index: 10; /* Make sure widget is on top */
         }
 
         .clickable-image, .clickable-image2 {
@@ -79,9 +80,27 @@
             transform: translate(0, 0); /* Move into view */
         }
 
-        .click-me-text.fade-out, .clickable-image.fade-out {
-            opacity: 0; /* Fade out the element */
+        .click-me-text.fade-out {
+            opacity: 0; /* Fade out the text */
             transform: translate(-100%, -100%); /* Optional: slide out if needed */
+        }
+
+        .clickable-image.fade-out, .clickable-image2.fade-out {
+            opacity: 0; /* Fade out the image */
+            transform: translate(-100%, -100%); /* Optional: slide out if needed */
+        }
+
+        .tour-dates-text {
+            position: absolute;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+
+        .tour-dates-text.visible {
+            opacity: 1;
         }
 
         /* Toggle button */
@@ -109,10 +128,12 @@
 </head>
 <body>
     <div class="background-image" id="backgroundImage"></div>
-    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSecondImage()">
-    <img src="static/clickable-image2.png" id="secondImage" class="clickable-image2">
+    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
     <div id="clickMeText" class="click-me-text">CLICK ME!</div>
-    
+
+    <img src="static/clickable-image2.png" id="randomImage2" class="clickable-image2">
+    <div id="tourDatesText" class="tour-dates-text">No available tour dates at this moment. Check back again soon!</div>
+
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
     <button id="toggleStrobe" class="toggle-button" onclick="toggleStrobe()">Toggle Party Mode</button>
@@ -140,10 +161,13 @@
         document.addEventListener("DOMContentLoaded", function() {
             const img = document.getElementById('randomImage');
             const text = document.getElementById('clickMeText');
+            const img2 = document.getElementById('randomImage2');
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
             const imgWidth = img.offsetWidth;
             const imgHeight = img.offsetHeight;
+            const img2Width = img2.offsetWidth;
+            const img2Height = img2.offsetHeight;
             const textWidth = text.offsetWidth;
             const textHeight = text.offsetHeight;
 
@@ -158,51 +182,57 @@
             // Center the text above the image
             text.style.left = `${randomX + (imgWidth / 2) - (textWidth / 2)}px`;
             text.style.top = `${randomY - textHeight}px`;
+
+            // Position the second image to not overlap with the Spotify widget
+            img2.style.left = `${randomX + imgWidth + 20}px`; // Position it to the right of the first image
+            img2.style.top = `${randomY}px`; // Align it with the first image
         });
 
         // Handle click event on the first image
-        function showSecondImage() {
-            const secondImg = document.getElementById('secondImage');
-            const widget = document.getElementById('spotify-widget');
+        function showSpotifyWidget() {
+            var widget = document.getElementById('spotify-widget');
+            widget.style.display = 'block';
+            setTimeout(function() {
+                widget.style.opacity = 1;
+            }, 10); // Ensure opacity change is detected
+            
+            // Fade out the "CLICK ME!" text and image after clicking the image
+            const img = document.getElementById('randomImage');
+            const text = document.getElementById('clickMeText');
+            text.classList.add('fade-out');
+            img.classList.add('fade-out');
 
-            // Show the second clickable image after clicking the first
-            secondImg.style.display = 'block';
+            // Show the second image with transition
+            const img2 = document.getElementById('randomImage2');
+            img2.classList.add('visible');
 
             setTimeout(function() {
-                secondImg.classList.add('visible');
-            }, 10); // Delay to allow the visibility transition to take effect
-            
-            // Move the second image to a new position, avoiding the Spotify widget
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            const imgWidth = secondImg.offsetWidth;
-            const imgHeight = secondImg.offsetHeight;
-
-            // Generate a random position that doesn't overlap with the Spotify widget
-            let randomX, randomY;
-            do {
-                randomX = Math.floor(Math.random() * (viewportWidth - imgWidth));
-                randomY = Math.floor(Math.random() * (viewportHeight - imgHeight));
-            } while (
-                randomX < widget.offsetLeft + widget.offsetWidth &&
-                randomX + imgWidth > widget.offsetLeft &&
-                randomY < widget.offsetTop + widget.offsetHeight &&
-                randomY + imgHeight > widget.offsetTop
-            );
-
-            // Set the second image position
-            secondImg.style.left = `${randomX}px`;
-            secondImg.style.top = `${randomY}px`;
+                img.style.display = 'none'; // Hide the first image after fade out
+                text.style.display = 'none'; // Hide the text after fade out
+            }, 2000); // Match the fade-out duration
         }
+
+        // Handle click event on the second image
+        document.getElementById('randomImage2').addEventListener('click', function() {
+            const img2 = document.getElementById('randomImage2');
+            const tourText = document.getElementById('tourDatesText');
+
+            // Fade out the second image
+            img2.classList.add('fade-out');
+            setTimeout(function() {
+                img2.style.display = 'none'; // Hide the second image
+
+                // Display and fade in the tour dates text
+                tourText.style.left = img2.style.left; // Position text at the same spot as the second image
+                tourText.style.top = img2.style.top; // Position text at the same spot as the second image
+                tourText.classList.add('visible'); // Fade in the tour dates text
+            }, 2000); // Match the fade-out duration
+        });
 
         // Toggle strobe effect
         function toggleStrobe() {
             const backgroundImage = document.getElementById('backgroundImage');
-            if (backgroundImage.classList.contains('strobe')) {
-                backgroundImage.classList.remove('strobe'); // Remove strobe effect
-            } else {
-                backgroundImage.classList.add('strobe'); // Add strobe effect
-            }
+            backgroundImage.classList.toggle('strobe');
         }
     </script>
 </body>
