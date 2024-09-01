@@ -90,19 +90,13 @@
         }
 
         .replacement-text {
-            position: fixed;
-            left: 10px; /* Position from the left edge */
-            top: 50%; /* Center vertically */
-            transform: translateY(-50%); /* Adjust to center vertically */
+            position: absolute;
             color: white;
             font-size: 24px;
-            text-align: center; /* Center align text */
+            text-align: center;
             opacity: 0; /* Start invisible */
             transition: opacity 2s ease-in-out; /* Fade in effect */
-            white-space: normal; /* Allow text to wrap */
-            line-height: 1.4; /* Adjust line height for readability */
-            max-width: calc(100vw - 20px); /* Prevent text from stretching too wide */
-            word-wrap: break-word; /* Break words to fit text within the container */
+            white-space: pre-line; /* Allow text to wrap into multiple lines */
         }
 
         .replacement-text.visible {
@@ -130,6 +124,14 @@
             opacity: 1; /* Make the button visible */
             transform: translateX(0); /* Move into view */
         }
+
+        @media screen and (max-width: 767px) {
+            .replacement-text {
+                position: relative;
+                top: 10px; /* Adjust this value as needed */
+                margin-top: 10px; /* Space between Spotify widget and text */
+            }
+        }
     </style>
 </head>
 <body>
@@ -137,7 +139,7 @@
     <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
     <img src="static/clickable-image2.png" id="randomImage2" class="clickable-image2" onclick="replaceWithText()">
     <div id="clickMeText" class="click-me-text">CLICK ME!</div>
-    <div id="replacementText" class="replacement-text">No available tour dates at this moment.<br>Check back again soon!</div>
+    <div id="replacementText" class="replacement-text">No available tour dates at this moment. Check back again soon!</div>
 
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
@@ -219,31 +221,26 @@
             text.classList.add('fade-out');
             img.classList.add('fade-out');
 
-            // Show the second image after the first image fades out
-            setTimeout(function() {
-                const img2 = document.getElementById('randomImage2');
-                img2.classList.add('visible');
-                img2.classList.remove('fade-out');
-            }, 2000); // Timing should match the fade-out duration
+            // Show the second image and Spotify widget
+            const img2 = document.getElementById('randomImage2');
+            img2.classList.add('visible');
         }
 
         // Handle click event on the second image
         function replaceWithText() {
             const img2 = document.getElementById('randomImage2');
-            img2.classList.add('fade-out');
+            const replacementText = document.getElementById('replacementText');
+            const widget = document.getElementById('spotify-widget');
 
-            const text = document.getElementById('replacementText');
-            text.classList.add('visible');
+            img2.classList.add('fade-out');
+            replacementText.classList.add('visible');
+            widget.style.opacity = 0; // Hide the Spotify widget
         }
 
-        // Toggle strobe effect
+        // Toggle the strobe effect
         function toggleStrobe() {
             const backgroundImage = document.getElementById('backgroundImage');
-            if (backgroundImage.classList.contains('strobe')) {
-                backgroundImage.classList.remove('strobe');
-            } else {
-                backgroundImage.classList.add('strobe');
-            }
+            backgroundImage.classList.toggle('strobe');
         }
     </script>
 </body>
