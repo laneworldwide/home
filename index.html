@@ -46,7 +46,6 @@
             height: 380px;
             opacity: 0;
             transition: opacity 2s ease-in-out;
-            z-index: 1; /* Ensure it's on top of other content */
         }
 
         .clickable-image {
@@ -59,29 +58,63 @@
 
         .clickable-image.visible {
             opacity: 1; /* Make the clickable image visible */
+            transform: translate(0, 0); /* Move into the screen */
         }
 
-        .click-me-text, .no-dates-text {
+        .clickable-image2 {
             position: absolute;
-            cursor: default;
+            width: 200px; /* Adjust size as needed */
+            cursor: pointer;
+            opacity: 0; /* Start invisible */
+            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
+        }
+
+        .clickable-image2.visible {
+            opacity: 1; /* Make the second clickable image visible */
+            transform: translate(0, 0); /* Move into the screen */
+        }
+
+        .click-me-text {
+            position: absolute;
+            cursor: pointer;
             color: white;
             font-size: 24px;
             text-align: center;
             opacity: 0; /* Start invisible */
+            transform: translate(-100%, -100%); /* Start off-screen */
             transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
             white-space: nowrap; /* Prevent text from wrapping */
         }
 
-        .click-me-text.visible, .no-dates-text.visible {
+        .click-me-text.visible {
             opacity: 1; /* Make the text visible */
+            transform: translate(0, 0); /* Move into view */
         }
 
         .click-me-text.fade-out {
             opacity: 0; /* Fade out the text */
+            transform: translate(-100%, -100%); /* Optional: slide out if needed */
         }
 
         .clickable-image.fade-out {
             opacity: 0; /* Fade out the image */
+            transform: translate(-100%, -100%); /* Optional: slide out if needed */
+        }
+
+        /* Replacement text */
+        .replacement-text {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 24px;
+            text-align: left;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            z-index: 1000; /* Ensure text is above other elements */
+            white-space: nowrap; /* Prevent text from wrapping */
+            padding: 20px; /* Adjust as needed */
         }
 
         /* Toggle button */
@@ -111,16 +144,16 @@
     <div class="background-image" id="backgroundImage"></div>
     <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
     <div id="clickMeText" class="click-me-text">CLICK ME!</div>
+    <img src="static/clickable-image2.png" id="randomImage2" class="clickable-image2" onclick="replaceWithText()">
+    <div id="replacementText" class="replacement-text">No available tour dates at this moment. Check back again soon!</div>
     
-    <img src="static/clickable-image2.png" id="secondImage" class="clickable-image">
-    <div id="noDatesText" class="no-dates-text">No available tour dates at this moment. Check back again soon!</div>
-
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
     <button id="toggleStrobe" class="toggle-button" onclick="toggleStrobe()">Toggle Party Mode</button>
 
     <script>
         window.addEventListener('load', function() {
+            // Transition to purple and gradually show the background image
             document.body.style.backgroundColor = 'purple';
 
             const backgroundImage = document.getElementById('backgroundImage');
@@ -139,26 +172,36 @@
 
         // Random image position script
         document.addEventListener("DOMContentLoaded", function() {
-            const img = document.getElementById('randomImage');
+            const img1 = document.getElementById('randomImage');
+            const img2 = document.getElementById('randomImage2');
             const text = document.getElementById('clickMeText');
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
-            const imgWidth = img.offsetWidth;
-            const imgHeight = img.offsetHeight;
+            const img1Width = img1.offsetWidth;
+            const img1Height = img1.offsetHeight;
+            const img2Width = img2.offsetWidth;
+            const img2Height = img2.offsetHeight;
             const textWidth = text.offsetWidth;
             const textHeight = text.offsetHeight;
 
-            // Generate random position within the viewport
-            const randomX = Math.floor(Math.random() * (viewportWidth - imgWidth));
-            const randomY = Math.floor(Math.random() * (viewportHeight - imgHeight));
+            // Generate random position within the viewport for the first image
+            const randomX1 = Math.floor(Math.random() * (viewportWidth - img1Width));
+            const randomY1 = Math.floor(Math.random() * (viewportHeight - img1Height));
 
-            // Set the image position
-            img.style.left = `${randomX}px`;
-            img.style.top = `${randomY}px`;
+            // Set the position for the first image
+            img1.style.left = `${randomX1}px`;
+            img1.style.top = `${randomY1}px`;
 
-            // Center the text above the image
-            text.style.left = `${randomX + (imgWidth / 2) - (textWidth / 2)}px`;
-            text.style.top = `${randomY - textHeight}px`;
+            // Center the text above the first image
+            text.style.left = `${randomX1 + (img1Width / 2) - (textWidth / 2)}px`;
+            text.style.top = `${randomY1 - textHeight}px`;
+
+            // Position the second clickable image to the right of the first image
+            const img2X = Math.min(viewportWidth - img2Width, randomX1 + img1Width + 20); // Ensure it fits in viewport and is not overlapping
+            const img2Y = randomY1; // Align vertically with the first image
+
+            img2.style.left = `${img2X}px`;
+            img2.style.top = `${img2Y}px`;
         });
 
         // Handle click event on the first image
@@ -167,70 +210,45 @@
             widget.style.display = 'block';
             setTimeout(function() {
                 widget.style.opacity = 1;
+
                 const backgroundImage = document.getElementById('backgroundImage');
-                backgroundImage.classList.remove('strobe'); // Ensure strobe is removed
+                backgroundImage.classList.add('strobe'); // Start strobe effect
+
+                // Show the second clickable image after the first image is clicked
+                const img2 = document.getElementById('randomImage2');
+                img2.classList.add('visible');
             }, 10); // Ensure opacity change is detected
             
-            // Fade out the "CLICK ME!" text and first image, then show second image
-            const img = document.getElementById('randomImage');
+            // Fade out the "CLICK ME!" text and image after clicking the image
+            const img1 = document.getElementById('randomImage');
             const text = document.getElementById('clickMeText');
-            const secondImg = document.getElementById('secondImage');
-            
             text.classList.add('fade-out');
-            img.classList.add('fade-out');
+            img1.classList.add('fade-out');
             setTimeout(function() {
-                img.style.display = 'none'; // Hide the first image after fade out
-                text.style.display = 'none'; // Hide the text after fade out
-                secondImg.classList.add('visible'); // Show the second image
-                centerSecondImage(); // Ensure the second image is positioned correctly
+                img1.style.display = 'none'; // Hide image after fade out
+                text.style.display = 'none'; // Hide text after fade out
             }, 2000); // Match the fade-out duration
         }
 
-        // Center the second image
-        function centerSecondImage() {
-            const secondImg = document.getElementById('secondImage');
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            const imgWidth = secondImg.offsetWidth;
-            const imgHeight = secondImg.offsetHeight;
-
-            // Center the second image within the viewport
-            secondImg.style.left = `${(viewportWidth - imgWidth) / 2}px`;
-            secondImg.style.top = `${(viewportHeight - imgHeight) / 2}px`;
-
-            // Center the "No available tour dates" text
-            centerNoDatesText();
-        }
-
         // Handle click event on the second image
-        document.getElementById('secondImage').addEventListener('click', function() {
-            const secondImg = document.getElementById('secondImage');
-            const noDatesText = document.getElementById('noDatesText');
-            secondImg.classList.remove('visible');
-            noDatesText.classList.add('visible');
-            centerNoDatesText(); // Ensure text is positioned correctly
-        });
+        function replaceWithText() {
+            const img2 = document.getElementById('randomImage2');
+            const replacementText = document.getElementById('replacementText');
 
-        // Center the "No available tour dates" text
-        function centerNoDatesText() {
-            const noDatesText = document.getElementById('noDatesText');
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            const textWidth = noDatesText.offsetWidth;
-            const textHeight = noDatesText.offsetHeight;
-
-            // Center the text within the viewport
-            noDatesText.style.left = `${(viewportWidth - textWidth) / 2}px`;
-            noDatesText.style.top = `${(viewportHeight - textHeight) / 2}px`;
+            img2.classList.add('fade-out');
+            setTimeout(function() {
+                img2.style.display = 'none'; // Hide second image after fade out
+                replacementText.classList.add('visible'); // Show replacement text
+            }, 2000); // Match the fade-out duration
         }
 
         // Toggle strobe effect
         function toggleStrobe() {
             const backgroundImage = document.getElementById('backgroundImage');
             if (backgroundImage.classList.contains('strobe')) {
-                backgroundImage.classList.remove('strobe');
+                backgroundImage.classList.remove('strobe'); // Remove strobe effect
             } else {
-                backgroundImage.classList.add('strobe');
+                backgroundImage.classList.add('strobe'); // Add strobe effect
             }
         }
     </script>
