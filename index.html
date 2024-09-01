@@ -102,6 +102,7 @@
             white-space: normal; /* Allow text to wrap */
             line-height: 1.4; /* Adjust line height for readability */
             max-width: calc(100vw - 20px); /* Prevent text from stretching too wide */
+            word-wrap: break-word; /* Break words to fit text within the container */
         }
 
         .replacement-text.visible {
@@ -136,7 +137,7 @@
     <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
     <img src="static/clickable-image2.png" id="randomImage2" class="clickable-image2" onclick="replaceWithText()">
     <div id="clickMeText" class="click-me-text">CLICK ME!</div>
-    <div id="replacementText" class="replacement-text">No available tour dates at this moment. Check back again soon!</div>
+    <div id="replacementText" class="replacement-text">No available tour dates at this moment.<br>Check back again soon!</div>
 
     <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 
@@ -218,42 +219,33 @@
             text.classList.add('fade-out');
             img.classList.add('fade-out');
 
-            // Show the second clickable image
-            const img2 = document.getElementById('randomImage2');
+            // Show the second image after the first image fades out
             setTimeout(function() {
+                const img2 = document.getElementById('randomImage2');
                 img2.classList.add('visible');
-            }, 2000); // Match the fade-out duration of the first image and text
-
-            setTimeout(function() {
-                img.style.display = 'none'; // Hide image after fade out
-                text.style.display = 'none'; // Hide text after fade out
-            }, 2000); // Match the fade-out duration
+                img2.classList.remove('fade-out');
+            }, 2000); // Timing should match the fade-out duration
         }
 
         // Handle click event on the second image
         function replaceWithText() {
             const img2 = document.getElementById('randomImage2');
-            const text = document.getElementById('replacementText');
-
-            // Fade out the second image
             img2.classList.add('fade-out');
 
-            // Show the replacement text
-            setTimeout(function() {
-                // Position the text to the left center of the viewport
-                text.style.left = '10px'; // Fixed position from the left
-                text.style.top = '50%'; // Center vertically
-                text.style.transform = 'translateY(-50%)'; // Adjust for vertical centering
-                text.classList.add('visible');
-                img2.style.display = 'none'; // Hide the image after fade out
-            }, 2000); // Match the fade-out duration
+            const text = document.getElementById('replacementText');
+            text.classList.add('visible');
         }
 
-        // Handle strobe toggle
+        // Toggle strobe effect
         function toggleStrobe() {
             const backgroundImage = document.getElementById('backgroundImage');
-            backgroundImage.classList.toggle('strobe');
+            if (backgroundImage.classList.contains('strobe')) {
+                backgroundImage.classList.remove('strobe');
+            } else {
+                backgroundImage.classList.add('strobe');
+            }
         }
     </script>
 </body>
 </html>
+
