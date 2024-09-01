@@ -96,10 +96,12 @@
             transform: translateY(-50%); /* Adjust to center vertically */
             color: white;
             font-size: 24px;
-            text-align: center;
+            text-align: left; /* Align text to the left */
             opacity: 0; /* Start invisible */
             transition: opacity 2s ease-in-out; /* Fade in effect */
-            white-space: nowrap; /* Prevent text from wrapping */
+            white-space: normal; /* Allow text to wrap */
+            line-height: 1.4; /* Adjust line height for readability */
+            max-width: calc(100vw - 20px); /* Prevent text from stretching too wide */
         }
 
         .replacement-text.visible {
