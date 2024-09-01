@@ -90,7 +90,10 @@
         }
 
         .replacement-text {
-            position: absolute;
+            position: fixed;
+            left: 10px; /* Position from the left edge */
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Adjust to center vertically */
             color: white;
             font-size: 24px;
             text-align: center;
@@ -235,8 +238,10 @@
 
             // Show the replacement text
             setTimeout(function() {
-                text.style.left = img2.style.left; // Position the text at the same spot as the image
-                text.style.top = img2.style.top;
+                // Position the text to the left center of the viewport
+                text.style.left = '10px'; // Fixed position from the left
+                text.style.top = '50%'; // Center vertically
+                text.style.transform = 'translateY(-50%)'; // Adjust for vertical centering
                 text.classList.add('visible');
                 img2.style.display = 'none'; // Hide the image after fade out
             }, 2000); // Match the fade-out duration
