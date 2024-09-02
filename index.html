@@ -9,9 +9,9 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: black; /* Start with black */
+            background-color: black;
             transition: background-color 3s ease-in-out;
-            overflow: hidden; /* Prevent scrollbars due to image overflow */
+            overflow: hidden;
         }
 
         .background-image {
@@ -23,11 +23,11 @@
             background: url('static/image1.jpg') no-repeat center center fixed;
             background-size: cover;
             opacity: 0;
-            transition: opacity 3s ease-in-out; /* Extended duration for smoother transition */
+            transition: opacity 3s ease-in-out;
         }
 
         .background-image.strobe {
-            animation: strobe 0.05s infinite; /* Increased speed for strobe effect */
+            animation: strobe 0.05s infinite;
         }
 
         @keyframes strobe {
@@ -46,21 +46,21 @@
             height: 380px;
             opacity: 0;
             transition: opacity 2s ease-in-out;
-            z-index: 10; /* Ensure widget is above other elements */
+            z-index: 10;
         }
 
         .clickable-image, .clickable-image2 {
             position: absolute;
-            width: 200px; /* Adjust size as needed */
+            width: 150px; /* Adjusted for better mobile visibility */
             cursor: pointer;
-            opacity: 0; /* Start invisible */
-            transform: translate(-100%, -100%); /* Start off-screen */
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            transition: opacity 2s ease-in-out, transform 2s ease-in-out;
         }
 
         .clickable-image.visible, .clickable-image2.visible {
-            opacity: 1; /* Make the clickable image visible */
-            transform: translate(0, 0); /* Move into the screen */
+            opacity: 1;
+            transform: translate(0, 0);
         }
 
         .click-me-text {
@@ -69,25 +69,20 @@
             color: white;
             font-size: 24px;
             text-align: center;
-            opacity: 0; /* Start invisible */
-            transform: translate(-100%, -100%); /* Start off-screen */
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
-            white-space: nowrap; /* Prevent text from wrapping */
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            transition: opacity 2s ease-in-out, transform 2s ease-in-out;
+            white-space: nowrap;
         }
 
         .click-me-text.visible {
-            opacity: 1; /* Make the text visible */
-            transform: translate(0, 0); /* Move into view */
+            opacity: 1;
+            transform: translate(0, 0);
         }
 
-        .click-me-text.fade-out, .clickable-image.fade-out {
-            opacity: 0; /* Fade out */
-            transform: translate(-100%, -100%); /* Optional: slide out */
-        }
-
-        .clickable-image2.fade-out {
-            opacity: 0; /* Fade out the image */
-            transform: translate(-100%, -100%); /* Optional: slide out */
+        .click-me-text.fade-out, .clickable-image.fade-out, .clickable-image2.fade-out {
+            opacity: 0;
+            transform: translate(-50%, -50%);
         }
 
         .replacement-text {
@@ -95,20 +90,19 @@
             color: white;
             font-size: 24px;
             text-align: center;
-            opacity: 0; /* Start invisible */
-            transition: opacity 2s ease-in-out; /* Fade in effect */
-            white-space: pre-line; /* Allow text to wrap into multiple lines */
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            white-space: pre-line;
             left: 50%;
             transform: translateX(-50%);
-            top: calc(50% + 190px); /* Default position for desktop */
-            z-index: 5; /* Ensure text is below the widget */
+            top: calc(50% + 190px);
+            z-index: 5;
         }
 
         .replacement-text.visible {
-            opacity: 1; /* Fade in the text */
+            opacity: 1;
         }
 
-        /* Toggle button */
         .toggle-button {
             position: fixed;
             top: 10px;
@@ -119,40 +113,32 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            z-index: 1000; /* Make sure the button is always on top */
-            opacity: 0; /* Start invisible */
-            transform: translateX(100%); /* Start off-screen */
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out; /* Fade and slide in effect */
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 2s ease-in-out, transform 2s ease-in-out;
         }
 
         .toggle-button.visible {
-            opacity: 1; /* Make the button visible */
-            transform: translateX(0); /* Move into view */
+            opacity: 1;
+            transform: translateX(0);
         }
 
-        /* Mobile styles */
         @media screen and (max-width: 767px) {
             .replacement-text {
-                position: relative;
-                top: auto; /* Reset top for mobile */
+                top: auto;
                 left: auto;
-                transform: none; /* Reset transform */
-                margin-top: 10px; /* Space between Spotify widget and text */
-                z-index: 5; /* Ensure text is below the widget */
+                transform: none;
+                margin-top: 10px;
+                z-index: 5;
             }
 
             .spotify-widget {
-                position: fixed; /* Keep it centered even on mobile */
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 280px; /* Slightly reduce width for mobile */
-                height: 360px; /* Slightly reduce height for mobile */
-                z-index: 10; /* Ensure widget stays on top */
-            }
-
-            .clickable-image, .clickable-image2 {
-                width: 150px; /* Adjust size for mobile */
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none;
+                z-index: 10;
             }
         }
     </style>
@@ -170,64 +156,50 @@
 
     <script>
         window.addEventListener('load', function() {
-            // Transition to purple and gradually show the background image
             document.body.style.backgroundColor = 'purple';
+            document.getElementById('backgroundImage').style.opacity = 1;
 
-            const backgroundImage = document.getElementById('backgroundImage');
-            backgroundImage.style.opacity = 1; // Fade in the background image
-
-            // Show the clickable image, text, and toggle button with transitions
             setTimeout(function() {
-                const img = document.getElementById('randomImage');
-                const text = document.getElementById('clickMeText');
-                const button = document.getElementById('toggleStrobe');
-                img.classList.add('visible');
-                text.classList.add('visible');
-                button.classList.add('visible');
-            }, 1000); // Reduced timing to make the elements appear 0.5 seconds sooner
+                document.getElementById('randomImage').classList.add('visible');
+                document.getElementById('clickMeText').classList.add('visible');
+                document.getElementById('toggleStrobe').classList.add('visible');
+            }, 1000);
         });
 
-        // Random image position script with viewport adjustment
         document.addEventListener("DOMContentLoaded", function() {
             const img = document.getElementById('randomImage');
             const text = document.getElementById('clickMeText');
             const img2 = document.getElementById('randomImage2');
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
-            const imgWidth = img.offsetWidth;
-            const imgHeight = img.offsetHeight;
-            const textWidth = text.offsetWidth;
-            const textHeight = text.offsetHeight;
-            const img2Width = img2.offsetWidth;
-            const img2Height = img2.offsetHeight;
 
-            // Ensure image stays within viewport
-            const randomX = Math.floor(Math.random() * (viewportWidth - imgWidth));
-            const randomY = Math.floor(Math.random() * (viewportHeight - imgHeight));
+            // Centralize clickable image and text
+            const imgCenterX = Math.floor(viewportWidth / 2 - img.offsetWidth / 2);
+            const imgCenterY = Math.floor(viewportHeight / 2 - img.offsetHeight / 2);
+            const textCenterX = imgCenterX + (img.offsetWidth / 2) - (text.offsetWidth / 2);
+            const textCenterY = imgCenterY - text.offsetHeight;
 
-            // Set positions for the first image and its text
-            img.style.left = `${randomX}px`;
-            img.style.top = `${randomY}px`;
+            img.style.left = `${imgCenterX}px`;
+            img.style.top = `${imgCenterY}px`;
 
-            text.style.left = `${randomX + (imgWidth / 2) - (textWidth / 2)}px`;
-            text.style.top = `${randomY - textHeight}px`;
+            text.style.left = `${textCenterX}px`;
+            text.style.top = `${textCenterY}px`;
 
-            // Set position for the second image
-            let randomX2, randomY2;
+            // Centralize second image without overlap
+            let img2CenterX, img2CenterY;
 
-            // Prevent overlap with the Spotify widget
             do {
-                randomX2 = Math.floor(Math.random() * (viewportWidth - img2Width));
-                randomY2 = Math.floor(Math.random() * (viewportHeight - img2Height));
+                img2CenterX = Math.floor(Math.random() * (viewportWidth - img2.offsetWidth) / 2) + imgCenterX - img2.offsetWidth / 2;
+                img2CenterY = Math.floor(Math.random() * (viewportHeight - img2.offsetHeight) / 2) + imgCenterY - img2.offsetHeight / 2;
             } while (
-                randomX2 + img2Width > (viewportWidth / 2 - 140) &&
-                randomX2 < (viewportWidth / 2 + 140) &&
-                randomY2 + img2Height > (viewportHeight / 2 - 190) &&
-                randomY2 < (viewportHeight / 2 + 190)
+                img2CenterX + img2.offsetWidth > imgCenterX + 150 &&
+                img2CenterX < imgCenterX + 150 &&
+                img2CenterY + img2.offsetHeight > imgCenterY + 190 &&
+                img2CenterY < imgCenterY + 190
             );
 
-            img2.style.left = `${randomX2}px`;
-            img2.style.top = `${randomY2}px`;
+            img2.style.left = `${img2CenterX}px`;
+            img2.style.top = `${img2CenterY}px`;
         });
 
         function showSpotifyWidget() {
@@ -236,17 +208,14 @@
             const widget = document.getElementById('spotify-widget');
             const img2 = document.getElementById('randomImage2');
 
-            // Fade out the image and text
             img.classList.add('fade-out');
             text.classList.add('fade-out');
 
-            // Fade in the Spotify widget
             widget.style.display = 'block';
             setTimeout(function() {
                 widget.style.opacity = 1;
-            }, 20); // Small delay to ensure smooth fade in
+            }, 20);
 
-            // Fade in the second image
             img2.classList.add('visible');
         }
 
@@ -254,18 +223,15 @@
             const img2 = document.getElementById('randomImage2');
             const replacementText = document.getElementById('replacementText');
 
-            // Fade out the second image
             img2.classList.add('fade-out');
 
-            // Fade in the replacement text
             setTimeout(function() {
                 replacementText.classList.add('visible');
-            }, 2000); // Delay to ensure smooth transition
+            }, 2000);
         }
 
         function toggleStrobe() {
-            const backgroundImage = document.getElementById('backgroundImage');
-            backgroundImage.classList.toggle('strobe'); // Toggle strobe effect
+            document.getElementById('backgroundImage').classList.toggle('strobe');
         }
     </script>
 </body>
