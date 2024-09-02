@@ -142,11 +142,17 @@
             }
 
             .spotify-widget {
-                position: relative; /* Ensure it remains centered on mobile */
-                top: auto;
-                left: auto;
-                transform: none;
+                position: fixed; /* Keep it centered even on mobile */
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 280px; /* Slightly reduce width for mobile */
+                height: 360px; /* Slightly reduce height for mobile */
                 z-index: 10; /* Ensure widget stays on top */
+            }
+
+            .clickable-image, .clickable-image2 {
+                width: 150px; /* Adjust size for mobile */
             }
         }
     </style>
@@ -214,8 +220,8 @@
                 randomX2 = Math.floor(Math.random() * (viewportWidth - img2Width));
                 randomY2 = Math.floor(Math.random() * (viewportHeight - img2Height));
             } while (
-                randomX2 + img2Width > (viewportWidth / 2 - 150) &&
-                randomX2 < (viewportWidth / 2 + 150) &&
+                randomX2 + img2Width > (viewportWidth / 2 - 140) &&
+                randomX2 < (viewportWidth / 2 + 140) &&
                 randomY2 + img2Height > (viewportHeight / 2 - 190) &&
                 randomY2 < (viewportHeight / 2 + 190)
             );
@@ -224,42 +230,42 @@
             img2.style.top = `${randomY2}px`;
         });
 
-        // Handle click event on the first image
         function showSpotifyWidget() {
-            const widget = document.getElementById('spotify-widget');
             const img = document.getElementById('randomImage');
             const text = document.getElementById('clickMeText');
+            const widget = document.getElementById('spotify-widget');
             const img2 = document.getElementById('randomImage2');
-            
-            // Show Spotify widget
-            widget.style.display = 'block';
-            setTimeout(function() {
-                widget.style.opacity = 1; // Fade in Spotify widget
-            }, 1000);
 
-            // Hide the first image and the text
+            // Fade out the image and text
             img.classList.add('fade-out');
             text.classList.add('fade-out');
 
-            // Show the second image and Spotify widget
+            // Fade in the Spotify widget
+            widget.style.display = 'block';
+            setTimeout(function() {
+                widget.style.opacity = 1;
+            }, 20); // Small delay to ensure smooth fade in
+
+            // Fade in the second image
             img2.classList.add('visible');
         }
 
-        // Handle click event on the second image
         function replaceWithText() {
             const img2 = document.getElementById('randomImage2');
             const replacementText = document.getElementById('replacementText');
-            const widget = document.getElementById('spotify-widget');
 
+            // Fade out the second image
             img2.classList.add('fade-out');
-            replacementText.classList.add('visible');
-            widget.style.opacity = 1; // Ensure the Spotify widget remains visible
+
+            // Fade in the replacement text
+            setTimeout(function() {
+                replacementText.classList.add('visible');
+            }, 2000); // Delay to ensure smooth transition
         }
 
-        // Toggle the strobe effect
         function toggleStrobe() {
             const backgroundImage = document.getElementById('backgroundImage');
-            backgroundImage.classList.toggle('strobe');
+            backgroundImage.classList.toggle('strobe'); // Toggle strobe effect
         }
     </script>
 </body>
