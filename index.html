@@ -187,21 +187,26 @@
             text.style.left = `${textCenterX}px`;
             text.style.top = `${textCenterY}px`;
 
-            // Centralize second image without overlap
-            let img2CenterX, img2CenterY;
+            // Centralize second image without overlap for desktop
+            if (viewportWidth > 767) {
+                img2.style.left = `${imgCenterX + 200}px`; // Offset to avoid overlap
+                img2.style.top = `${imgCenterY}px`;
+            } else {
+                let img2CenterX, img2CenterY;
 
-            do {
-                img2CenterX = Math.floor(Math.random() * (viewportWidth - img2.offsetWidth) / 2) + imgCenterX - img2.offsetWidth / 2;
-                img2CenterY = Math.floor(Math.random() * (viewportHeight - img2.offsetHeight) / 2) + imgCenterY - img2.offsetHeight / 2;
-            } while (
-                img2CenterX + img2.offsetWidth > imgCenterX + 150 &&
-                img2CenterX < imgCenterX + 150 &&
-                img2CenterY + img2.offsetHeight > imgCenterY + 190 &&
-                img2CenterY < imgCenterY + 190
-            );
+                do {
+                    img2CenterX = Math.floor(Math.random() * (viewportWidth - img2.offsetWidth) / 2) + imgCenterX - img2.offsetWidth / 2;
+                    img2CenterY = Math.floor(Math.random() * (viewportHeight - img2.offsetHeight) / 2) + imgCenterY - img2.offsetHeight / 2;
+                } while (
+                    img2CenterX + img2.offsetWidth > imgCenterX + 150 &&
+                    img2CenterX < imgCenterX + 150 &&
+                    img2CenterY + img2.offsetHeight > imgCenterY + 190 &&
+                    img2CenterY < imgCenterY + 190
+                );
 
-            img2.style.left = `${img2CenterX}px`;
-            img2.style.top = `${img2CenterY}px`;
+                img2.style.left = `${img2CenterX}px`;
+                img2.style.top = `${img2CenterY}px`;
+            }
         });
 
         function showSpotifyWidget() {
@@ -238,3 +243,4 @@
     </script>
 </body>
 </html>
+
