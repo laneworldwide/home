@@ -3,246 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LANE</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>Welcome to the Webpage</title>
     <style>
         body {
             margin: 0;
             padding: 0;
             background-color: black;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* The black overlay for the start screen */
-        #startScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: black;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Ensure it's on top of everything */
-        }
-
-        /* The start button image */
-        #startButton {
-            width: 150px; /* Adjust the size of your start image */
-            cursor: pointer;
-            transition: opacity 0.5s ease-in-out;
-        }
-
-        /* Content that will be hidden initially */
-        .content {
-            display: none;
-        }
-
-        .background-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('static/image1.jpg') no-repeat center center fixed;
-            background-size: cover;
-            opacity: 0;
-            transition: opacity 3s ease-in-out;
-        }
-
-        .background-image.strobe {
-            animation: strobe 0.05s infinite;
-        }
-
-        @keyframes strobe {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        .spotify-widget {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 380px;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-            z-index: 10;
-        }
-
-        .clickable-image, .clickable-image2 {
-            position: absolute;
-            width: 150px; /* Adjusted for better mobile visibility */
-            cursor: pointer;
-            opacity: 0;
-            transform: translate(-50%, -50%);
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out;
-        }
-
-        .clickable-image.visible, .clickable-image2.visible {
-            opacity: 1;
-            transform: translate(0, 0);
-        }
-
-        .click-me-text {
-            position: absolute;
-            cursor: pointer;
+            height: 100vh;
             color: white;
-            font-size: 24px;
-            text-align: center;
-            opacity: 0;
-            transform: translate(-50%, -50%);
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out;
-            white-space: nowrap;
+            font-family: Arial, sans-serif;
         }
 
-        .click-me-text.visible {
-            opacity: 1;
-            transform: translate(0, 0);
-        }
-
-        .click-me-text.fade-out, .clickable-image.fade-out, .clickable-image2.fade-out {
-            opacity: 0;
-            transform: translate(-50%, -50%);
-        }
-
-        .replacement-text {
-            position: absolute;
-            color: white;
-            font-size: 24px;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-            white-space: pre-line;
-            left: 50%;
-            transform: translateX(-50%);
-            top: calc(50% + 190px);
-            z-index: 5;
-        }
-
-        .replacement-text.visible {
-            opacity: 1;
-        }
-
-        .toggle-button {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            padding: 10px 20px;
+        .button {
             background-color: #333;
             color: white;
+            padding: 20px 40px;
             border: none;
-            border-radius: 5px;
+            font-size: 24px;
             cursor: pointer;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: opacity 2s ease-in-out, transform 2s ease-in-out;
+            border-radius: 5px;
+            text-transform: uppercase;
+            transition: background-color 0.3s;
         }
 
-        .toggle-button.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        @media screen and (max-width: 767px) {
-            .replacement-text {
-                top: auto;
-                left: auto;
-                transform: none;
-                margin-top: 10px;
-                z-index: 5;
-            }
-
-            .spotify-widget {
-                width: 100%;
-                height: auto;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                z-index: 10;
-            }
+        .button:hover {
+            background-color: #555;
         }
     </style>
 </head>
 <body>
-    <!-- Start Screen (Black background with clickable image) -->
-    <div id="startScreen">
-        <img src="static/start-image.png" id="startButton" alt="Start Button" onclick="startPage()">
-    </div>
-
-    <!-- Main Content (Initially hidden) -->
-    <div class="content">
-        <div class="background-image" id="backgroundImage"></div>
-        <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
-        <img src="static/clickable-image2.png" id="randomImage2" class="clickable-image2" onclick="replaceWithText()">
-        <div id="clickMeText" class="click-me-text">CLICK ME!</div>
-        <div id="replacementText" class="replacement-text">Dec 9, Raleigh, NC - Neptunes Parlour - TIME TBA</div>
-
-        <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-
-        <button id="toggleStrobe" class="toggle-button" onclick="toggleStrobe()">Toggle Party Mode</button>
-    </div>
-
-    <script>
-        // Function to start the page after clicking the start button
-        function startPage() {
-            // Hide the start screen
-            document.getElementById('startScreen').style.display = 'none';
-
-            // Show the content (make it visible)
-            document.querySelector('.content').style.display = 'block';
-
-            // Set the background image opacity after starting
-            document.body.style.backgroundColor = 'purple';
-            document.getElementById('backgroundImage').style.opacity = 1;
-
-            // Show the clickable images and text after a delay
-            setTimeout(function() {
-                document.getElementById('randomImage').classList.add('visible');
-                document.getElementById('clickMeText').classList.add('visible');
-                document.getElementById('toggleStrobe').classList.add('visible');
-            }, 1000);
-        }
-
-        function showSpotifyWidget() {
-            const img = document.getElementById('randomImage');
-            const text = document.getElementById('clickMeText');
-            const widget = document.getElementById('spotify-widget');
-            const img2 = document.getElementById('randomImage2');
-
-            img.classList.add('fade-out');
-            text.classList.add('fade-out');
-
-            widget.style.display = 'block';
-            setTimeout(function() {
-                widget.style.opacity = 1;
-            }, 20);
-
-            img2.classList.add('visible');
-        }
-
-        function replaceWithText() {
-            const img2 = document.getElementById('randomImage2');
-            const replacementText = document.getElementById('replacementText');
-
-            img2.classList.add('fade-out');
-
-            setTimeout(function() {
-                replacementText.classList.add('visible');
-            }, 2000);
-        }
-
-        function toggleStrobe() {
-            document.getElementById('backgroundImage').classList.toggle('strobe');
-        }
-    </script>
+    <button class="button" onclick="window.location.href='original-page.html'">Start</button>
 </body>
 </html>
 
