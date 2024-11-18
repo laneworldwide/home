@@ -10,8 +10,34 @@
             margin: 0;
             padding: 0;
             background-color: black;
-            transition: background-color 3s ease-in-out;
             overflow: hidden;
+            position: relative;
+        }
+
+        /* The black overlay for the start screen */
+        #startScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's on top of everything */
+        }
+
+        /* The start button image */
+        #startButton {
+            width: 150px; /* Adjust the size of your start image */
+            cursor: pointer;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Content that will be hidden initially */
+        .content {
+            display: none;
         }
 
         .background-image {
@@ -146,68 +172,44 @@
     </style>
 </head>
 <body>
-    <div class="background-image" id="backgroundImage"></div>
-    <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
-    <img src="static/clickable-image2.png" id="randomImage2" class="clickable-image2" onclick="replaceWithText()">
-    <div id="clickMeText" class="click-me-text">CLICK ME!</div>
-    <div id="replacementText" class="replacement-text">Dec 9, Raleigh, NC - Neptunes Parlour - TIME TBA</div>
+    <!-- Start Screen (Black background with clickable image) -->
+    <div id="startScreen">
+        <img src="static/start-image.png" id="startButton" alt="Start Button" onclick="startPage()">
+    </div>
 
-    <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <!-- Main Content (Initially hidden) -->
+    <div class="content">
+        <div class="background-image" id="backgroundImage"></div>
+        <img src="static/clickable-image.png" id="randomImage" class="clickable-image" onclick="showSpotifyWidget()">
+        <img src="static/clickable-image2.png" id="randomImage2" class="clickable-image2" onclick="replaceWithText()">
+        <div id="clickMeText" class="click-me-text">CLICK ME!</div>
+        <div id="replacementText" class="replacement-text">Dec 9, Raleigh, NC - Neptunes Parlour - TIME TBA</div>
 
-    <button id="toggleStrobe" class="toggle-button" onclick="toggleStrobe()">Toggle Party Mode</button>
+        <iframe id="spotify-widget" class="spotify-widget" src="https://open.spotify.com/embed/artist/61kSGvzhg2t45SvwwkENLh" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+        <button id="toggleStrobe" class="toggle-button" onclick="toggleStrobe()">Toggle Party Mode</button>
+    </div>
 
     <script>
-        window.addEventListener('load', function() {
+        // Function to start the page after clicking the start button
+        function startPage() {
+            // Hide the start screen
+            document.getElementById('startScreen').style.display = 'none';
+
+            // Show the content (make it visible)
+            document.querySelector('.content').style.display = 'block';
+
+            // Set the background image opacity after starting
             document.body.style.backgroundColor = 'purple';
             document.getElementById('backgroundImage').style.opacity = 1;
 
+            // Show the clickable images and text after a delay
             setTimeout(function() {
                 document.getElementById('randomImage').classList.add('visible');
                 document.getElementById('clickMeText').classList.add('visible');
                 document.getElementById('toggleStrobe').classList.add('visible');
             }, 1000);
-        });
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const img = document.getElementById('randomImage');
-            const text = document.getElementById('clickMeText');
-            const img2 = document.getElementById('randomImage2');
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-
-            // Centralize clickable image and text
-            const imgCenterX = Math.floor(viewportWidth / 2 - img.offsetWidth / 2);
-            const imgCenterY = Math.floor(viewportHeight / 2 - img.offsetHeight / 2);
-            const textCenterX = imgCenterX + (img.offsetWidth / 2) - (text.offsetWidth / 2);
-            const textCenterY = imgCenterY - text.offsetHeight;
-
-            img.style.left = `${imgCenterX}px`;
-            img.style.top = `${imgCenterY}px`;
-
-            text.style.left = `${textCenterX}px`;
-            text.style.top = `${textCenterY}px`;
-
-            // Centralize second image without overlap for desktop
-            if (viewportWidth > 767) {
-                img2.style.left = `${imgCenterX + 200}px`; // Offset to avoid overlap
-                img2.style.top = `${imgCenterY}px`;
-            } else {
-                let img2CenterX, img2CenterY;
-
-                do {
-                    img2CenterX = Math.floor(Math.random() * (viewportWidth - img2.offsetWidth) / 2) + imgCenterX - img2.offsetWidth / 2;
-                    img2CenterY = Math.floor(Math.random() * (viewportHeight - img2.offsetHeight) / 2) + imgCenterY - img2.offsetHeight / 2;
-                } while (
-                    img2CenterX + img2.offsetWidth > imgCenterX + 150 &&
-                    img2CenterX < imgCenterX + 150 &&
-                    img2CenterY + img2.offsetHeight > imgCenterY + 190 &&
-                    img2CenterY < imgCenterY + 190
-                );
-
-                img2.style.left = `${img2CenterX}px`;
-                img2.style.top = `${img2CenterY}px`;
-            }
-        });
+        }
 
         function showSpotifyWidget() {
             const img = document.getElementById('randomImage');
