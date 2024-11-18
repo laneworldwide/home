@@ -5,9 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LANE</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        /* Full-screen black background */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Centered image styling */
+        #startImage {
+            cursor: pointer;
+            width: 80%; /* Adjust the size of the image */
+            max-width: 600px; /* Maximum width */
+            height: auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to LANE</h1>
-    <a href="original-page.html">Go to the original page</a> <!-- Link to the original page -->
+    <!-- Start Image (clickable) -->
+    <img src="start-image.png" id="startImage" onclick="redirectToOriginalPage()">
+
+    <script>
+        // Redirects the user to the original page when they click the start image
+        function redirectToOriginalPage() {
+            window.location.href = 'original-page.html';  // Replace with the actual path of your original page
+        }
+    </script>
 </body>
 </html>
