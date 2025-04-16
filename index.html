@@ -1,94 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LANE</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: black;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LANE</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
 
-        #startImage {
-            cursor: pointer;
-            width: 80%;
-            max-width: 600px;
-            height: auto;
-            display: block;
-        }
+    #startImage {
+      cursor: pointer;
+      width: 80%;
+      max-width: 600px;
+      height: auto;
+      display: block;
+    }
 
-        #iframeContainer {
-            width: 100%;
-            height: 100%;
-            display: none;
-        }
+    #iframeContainer {
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
 
-        /* Merch button styling */
-        .merch-link {
-            display: none;
-            position: absolute;
-            font-weight: bold;
-            text-decoration: none;
-            color: #fff;
-            font-family: sans-serif;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 8px 12px;
-            border: 2px solid #fff;
-            border-radius: 6px;
-            z-index: 999;
-            transition: background 0.3s, color 0.3s;
-        }
+    /* Merch button */
+    .merch-link {
+      display: block;
+      margin: 20px auto 10px auto;
+      font-weight: bold;
+      text-decoration: none;
+      color: #fff;
+      font-family: sans-serif;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      border: 2px solid #fff;
+      border-radius: 6px;
+      transition: background 0.3s, color 0.3s;
+    }
 
-        .merch-link:hover {
-            background: #fff;
-            color: #000;
-        }
-
-        /* Show merch link on mobile, positioned lower */
-        @media (max-width: 768px) {
-            .merch-link {
-                display: block;
-                position: relative;
-                font-size: 14px;
-                margin-top: 60px; /* This space pushes it down */
-                text-align: center;
-            }
-        }
-    </style>
+    .merch-link:hover {
+      background: #fff;
+      color: #000;
+    }
+  </style>
 </head>
 <body>
-    <!-- Merch Button -->
-    <a href="https://laneworldwide.bigcartel.com" class="merch-link" target="_blank">Merch</a>
+  <!-- Merch button (shows above everything) -->
+  <a
+    href="https://laneworldwide.bigcartel.com"
+    class="merch-link"
+    target="_blank"
+    >Merch</a
+  >
 
-    <!-- Start Image -->
-    <img src="static/start-image.png" id="startImage" onclick="loadIframe()">
+  <!-- Start image -->
+  <img
+    src="static/start-image.png"
+    id="startImage"
+    onclick="loadIframe()"
+  />
 
-    <!-- Iframe -->
-    <div id="iframeContainer">
-        <iframe id="contentIframe" src=""></iframe>
-    </div>
+  <!-- Iframe container -->
+  <div id="iframeContainer">
+    <iframe id="contentIframe" src=""></iframe>
+  </div>
 
-    <script>
-        function loadIframe() {
-            document.getElementById('startImage').style.display = 'none';
-            document.getElementById('iframeContainer').style.display = 'block';
-            const iframe = document.getElementById('contentIframe');
-            iframe.src = "original-page.html";
-        }
-    </script>
+  <script>
+    function loadIframe() {
+      document.getElementById("startImage").style.display = "none";
+      document.getElementById("iframeContainer").style.display = "block";
+    }
+  </script>
 </body>
 </html>
